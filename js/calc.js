@@ -12,7 +12,7 @@ const val = (id) => $id(id)?.value || '';
 const fmt = (v, d = 2) => (isNaN(v) || !isFinite(v)) ? '—' : v.toFixed(d);
 const G = 9.81;
 
-let _m = { type: '', inputs: {}, resultsHtml: '', schemaHtml: '' };
+let _m = { type: '', inputs: [], steps: [], resultsHtml: '', schemaHtml: '' };
 
 function _dlReport() {
   if (typeof downloadReport !== 'function') return;
@@ -22,7 +22,8 @@ function _dlReport() {
     subtitle: C.subtitle || '',
     schemaHtml: _m.schemaHtml,
     resultsHtml: _m.resultsHtml,
-    inputRows: Object.entries(_m.inputs).map(([k,v]) => [k, v])
+    inputRows: _m.inputs,
+    steps: _m.steps
   });
 }
 
@@ -133,7 +134,6 @@ const CALCS = {
 <button class="calc-btn" onclick="CALCS.belt.run()">Розрахувати</button>`,
 
     run() {
-      _m.inputs = { 'L, мм': num('b_L'), 'H, мм': num('b_H'), 'beta, deg': num('b_beta') || 'авто', 'B, мм': num('b_B')*1000, 'v, м/с': num('b_v'), 'Q, т/год': num('b_Q'), 'rho, т/м3': num('b_rho'), 'phi, deg': num('b_phi'), 'eta': num('b_eta'), 'omega': num('b_omega'), 'kz': num('b_kz') };
       const L = num('b_L') / 1000, H = num('b_H') / 1000, rho = num('b_rho');
       const phi = num('b_phi') * Math.PI / 180;
       const Q = num('b_Q'), v = num('b_v'), B = num('b_B');
@@ -160,6 +160,61 @@ const CALCS = {
       const F2 = F1 + F;
       const betaMax = (phi * 180 / Math.PI) * 0.7;
       const Frol = (qm + qb) * G * 1.2;
+
+      _m.inputs = [
+        ['Довжина L', num('b_L'), 'мм'],
+        ['Висота підйому H', num('b_H'), 'мм'],
+        ['Кут нахилу β', val('b_beta') || 'авто', '°'],
+        ['Ширина стрічки B', (B*1000).toFixed(0), 'мм'],
+        ['Швидкість v', v, 'м/с'],
+        ['Продуктивність Q', Q, 'т/год'],
+        ['Насипна щільність ρ', rho, 'т/м³'],
+        ['Кут укосу φ', num('b_phi'), '°'],
+        ['Маса 1 м стрічки q_b', qb, 'кг/м'],
+        ['Ролики робочої гілки q_ro', qro, 'кг/м'],
+        ['Ролики холостої гілки q_ru', qru, 'кг/м'],
+        ['ККД привода η', eta, ''],
+        ['Коеф. опору ω', omega, ''],
+        ['Запас потужності k_z', kz, ''],
+      ];
+      _m.steps = [
+        { n:'1', title:'Кут нахилу траси',
+          formula:'β = arctan(H / √(L² − H²))',
+          sub:`arctan(${fmt(H,2)} / √(${fmt(L,2)}² − ${fmt(H,2)}²)) = arctan(${fmt(H,2)} / ${fmt(Math.sqrt(Math.max(0.001,L*L-H*H)),2)})`,
+          result:`β = ${fmt(beta,1)} °` },
+        { n:'2', title:'Погонна маса вантажу q_m = Q / (3,6 · v)',
+          formula:'q_m = Q / (3,6 · v)',
+          sub:`${fmt(Q,0)} / (3,6 · ${v})`,
+          result:`q_m = ${fmt(qm,2)} кг/м` },
+        { n:'3', title:'Ефективна ширина та площа перерізу потоку',
+          formula:'B_еф = 0,9·B − 0,05 ;  A = B_еф² · (0,16 + 0,12·sin φ)',
+          sub:`B_еф = 0,9·${fmt(B,3)} − 0,05 = ${fmt(Beff,3)} м ;  A = ${fmt(Beff,3)}² · (0,16 + 0,12·sin ${num('b_phi')}°)`,
+          result:`A = ${fmt(A,5)} м²` },
+        { n:'4', title:'Теоретична продуктивність при B = '+(B*1000).toFixed(0)+' мм',
+          formula:'Q_th = 3600 · A · v · ρ',
+          sub:`3600 · ${fmt(A,5)} · ${v} · ${rho}`,
+          result:`Q_th = ${fmt(Qth,1)} т/год` },
+        { n:'5', title:'Горизонтальна складова тягового зусилля W_h',
+          formula:'W_h = ω · (q_m + q_b + q_ro + q_b + q_ru) · g · L',
+          sub:`${omega} · (${fmt(qm,1)} + ${qb} + ${qro} + ${qb} + ${qru}) · 9,81 · ${fmt(L,1)}`,
+          result:`W_h = ${fmt(Wh,0)} Н = ${fmt(Wh/1000,3)} кН` },
+        { n:'6', title:'Вертикальна складова (підйом матеріалу) W_v',
+          formula:'W_v = q_m · g · H',
+          sub:`${fmt(qm,2)} · 9,81 · ${fmt(H,2)}`,
+          result:`W_v = ${fmt(Wv,0)} Н = ${fmt(Wv/1000,3)} кН` },
+        { n:'7', title:'Сумарне тягове зусилля F',
+          formula:'F = W_h + W_v',
+          sub:`${fmt(Wh,0)} + ${fmt(Wv,0)}`,
+          result:`F = ${fmt(F,0)} Н = ${fmt(F/1000,3)} кН` },
+        { n:'8', title:'Потужність на барабані та потужність приводу P',
+          formula:'P_бар = F · v ;  P = P_бар / η · k_z',
+          sub:`P_бар = ${fmt(F,0)} · ${v} = ${fmt(Pdrum,0)} Вт ;  P = ${fmt(Pdrum,0)} / ${eta} · ${kz} / 1000`,
+          result:`P = ${fmt(Pm,2)} кВт` },
+        { n:'9', title:'Натяг стрічки (Ейлер, μ = 0,35, кут обхвату 180°)',
+          formula:'e^(μπ) = e^(0,35·π) ≈ 3,00 ;  F₁ = F / (e^(μπ) − 1) ;  F₂ = F₁ + F',
+          sub:`F₁ = ${fmt(F,0)} / (${fmt(ew,2)} − 1) ;  F₂ = ${fmt(F1,0)} + ${fmt(F,0)}`,
+          result:`F₁ = ${fmt(F1/1000,3)} кН,  F₂ = ${fmt(F2/1000,3)} кН` },
+      ];
 
       showResults(`
 <div class="res-hl"><span class="big">${fmt(Pm,1)} кВт</span><span class="lbl">Потужність приводу · запас ×${kz}</span></div>
@@ -353,7 +408,6 @@ ${Qth < Q * 0.95
 <button class="calc-btn" onclick="CALCS.screw.run()">Розрахувати</button>`,
 
     run() {
-      _m.inputs = { 'L, мм': num('s_L'), 'beta, deg': num('s_beta'), 'D, мм': num('s_D')*1000, 'rho, т/м3': num('s_rho'), 'psi': parseFloat(val('s_psi')), 'Q, т/год': num('s_Q'), 'n, об/хв': num('s_n'), 'Cm': parseFloat(val('s_Cm')), 'eta': num('s_eta'), 'k': num('s_k') };
       const L = num('s_L') / 1000, beta = num('s_beta'), D = num('s_D'), rho = num('s_rho');
       const psi = parseFloat(val('s_psi'));
       const Q = num('s_Q'), n = num('s_n');
@@ -372,6 +426,57 @@ ${Qth < Q * 0.95
       const M = Pt*1000/(2*Math.PI*n/60);
       const qsc = 8 + D*150;
       const Fb = qsc*G*L/2;
+
+      _m.inputs = [
+        ['Довжина L', num('s_L'), 'мм'],
+        ['Кут нахилу β', beta, '°'],
+        ['Діаметр шнека D', (D*1000).toFixed(0), 'мм'],
+        ['Насипна щільність ρ', rho, 'т/м³'],
+        ['Коеф. заповнення ψ', psi, ''],
+        ['Продуктивність Q', Q, 'т/год'],
+        ['Частота обертання n', n, 'об/хв'],
+        ['Коеф. опору C_m', Cm, ''],
+        ['ККД привода η', eta, ''],
+        ['Запас потужності k', k, ''],
+      ];
+      _m.steps = [
+        { n:'1', title:'Коеф. зниження продуктивності для похилого шнека C_β',
+          formula:'C_β = cos β − 0,75 · sin β',
+          sub:`cos ${beta}° − 0,75 · sin ${beta}°`,
+          result:`C_β = ${fmt(Cb,3)}` },
+        { n:'2', title:'Крок гвинта (для стандартного шнека t = D)',
+          formula:'t = D',
+          sub:`t = ${(D*1000).toFixed(0)} мм`,
+          result:`t = ${(D*1000).toFixed(0)} мм` },
+        { n:'3', title:'Фактична продуктивність при n = '+n+' об/хв',
+          formula:'Q_a = (π/4) · D² · t · (n/60) · ψ · ρ · C_β · 3600',
+          sub:`(π/4) · ${fmt(D,3)}² · ${fmt(t,3)} · (${n}/60) · ${psi} · ${rho} · ${fmt(Cb,3)} · 3600`,
+          result:`Q_a = ${fmt(Qa,2)} т/год` },
+        { n:'4', title:'Потрібна частота обертання для Q = '+Q+' т/год',
+          formula:'n_req = Q / [(π/4)·D²·t·ψ·ρ·C_β·3600] · 60',
+          sub:`${Q} / [(π/4)·${fmt(D,3)}²·${fmt(t,3)}·${psi}·${rho}·${fmt(Cb,3)}·3600] · 60`,
+          result:`n_req = ${fmt(nReq,0)} об/хв` },
+        { n:'5', title:'Критична (центрифугувальна) частота обертання',
+          formula:'n_кр = 60 / (π · D)',
+          sub:`60 / (π · ${fmt(D,3)})`,
+          result:`n_кр = ${fmt(nCr,1)} об/хв ;  допустимо n ≤ 0,7·n_кр = ${fmt(nCr*0.7,0)} об/хв` },
+        { n:'6', title:'Потужність на горизонтальне переміщення P_h',
+          formula:'P_h = Q · L · C_m / (367 · η)',
+          sub:`${Q} · ${fmt(L,2)} · ${Cm} / (367 · ${eta})`,
+          result:`P_h = ${fmt(Ph,3)} кВт` },
+        { n:'7', title:'Потужність на підйом матеріалу P_v',
+          formula:'P_v = Q · H / (367 · η)  де  H = L · sin β',
+          sub:`H = ${fmt(L,2)} · sin ${beta}° = ${fmt(H,3)} м ;  P_v = ${Q} · ${fmt(H,3)} / (367 · ${eta})`,
+          result:`P_v = ${fmt(Pv,3)} кВт` },
+        { n:'8', title:'Повна потужність приводу з запасом',
+          formula:'P = (P_h + P_v) · k',
+          sub:`(${fmt(Ph,3)} + ${fmt(Pv,3)}) · ${k}`,
+          result:`P = ${fmt(Pt,3)} кВт` },
+        { n:'9', title:'Крутний момент на валу шнека',
+          formula:'M = P · 1000 / ω  де  ω = 2π·n/60',
+          sub:`M = ${fmt(Pt,3)}·1000 / (2π·${n}/60)`,
+          result:`M = ${fmt(M,0)} Н·м` },
+      ];
 
       showResults(`
 <div class="res-hl"><span class="big">${fmt(Pt,2)} кВт</span><span class="lbl">Потужність приводу · запас ×${k}</span></div>
@@ -571,7 +676,6 @@ ${Qa < Q*0.95 ? `<div class="note warn">Фактична подача ${fmt(Qa,1
 <button class="calc-btn" onclick="CALCS.mesh_chain.run()">Розрахувати</button>`,
 
     run() {
-      _m.inputs = { 'L, мм': num('m_L'), 'H, мм': num('m_H'), 'B, мм': num('m_B'), 'v, м/с': num('m_v'), 'f': parseFloat(val('m_f')), 'eta': num('m_eta'), 'k': num('m_k'), 'ds, мм': num('m_ds'), 'chains': parseFloat(val('m_chains')) };
       const L = num('m_L') / 1000, H = num('m_H') / 1000, B = num('m_B') / 1000;
       const v = num('m_v'), f = parseFloat(val('m_f'));
       const eta = num('m_eta'), k = num('m_k'), ds = num('m_ds') / 1000;
@@ -603,6 +707,57 @@ ${Qa < Q*0.95 ? `<div class="note warn">Фактична подача ${fmt(Qa,1
       const driveNote = val('m_drive') === 'shaft'
         ? `Поперечний вал: сумарний момент ${fmt(M,0)} Н·м розподілений на 2 зірочки (по ≈${fmt(M/2,0)} Н·м). Вал розраховується на кручення повним моментом між мотор-редуктором та першою зірочкою.`
         : `Одна зірочка передає повний момент ${fmt(M,0)} Н·м. Слідкуйте за перекосом несучої частини.`;
+
+      _m.inputs = [
+        ['Довжина L', num('m_L'), 'мм'],
+        ['Висота підйому H', num('m_H'), 'мм'],
+        ['Ширина несучої частини B', num('m_B'), 'мм'],
+        ['Швидкість v', v, 'м/с'],
+        ['Коеф. тертя f', f, ''],
+        ['ККД привода η', eta, ''],
+        ['Запас потужності k', k, ''],
+        ['Діам. ділильного кола зірочки d_s', num('m_ds'), 'мм'],
+        ['Кількість ланцюгів', nCh, ''],
+        ['Розривне навантаження ланцюга', num('m_fbreak'), 'кН'],
+      ];
+      _m.steps = [
+        { n:'1', title:'Кут нахилу β',
+          formula:'β = arctan(H / √(L² − H²))',
+          sub:`arctan(${fmt(H,3)} / ${fmt(Math.sqrt(Math.max(0.001,L*L-H*H)),3)})`,
+          result:`β = ${fmt(beta,1)} °` },
+        { n:'2', title:'Погонна маса вантажу q_ван',
+          formula:'q_ван = m / крок (штучний) ; або Q/(3,6·v) (масовий потік) ; або ρ_пов·B (розподілений)',
+          sub:`q_ван = ${fmt(qload,3)} кг/м ;  Q = ${fmt(Qth,2)} т/год`,
+          result:`q_ван = ${fmt(qload,3)} кг/м` },
+        { n:'3', title:'Тертя робочої (вантаженої) гілки F_роб',
+          formula:'F_роб = f · (q_рух + q_ван) · g · L · cos β',
+          sub:`${f} · (${fmt(qc+qn+qa,2)} + ${fmt(qload,2)}) · 9,81 · ${fmt(L,2)} · cos ${fmt(beta,1)}°`,
+          result:`F_роб = ${fmt(Fgo,0)} Н` },
+        { n:'4', title:'Тертя холостої гілки F_хол',
+          formula:'F_хол = f · q_рух · g · L · cos β',
+          sub:`${f} · ${fmt(qc+qn+qa,2)} · 9,81 · ${fmt(L,2)} · cos ${fmt(beta,1)}°`,
+          result:`F_хол = ${fmt(Fret,0)} Н` },
+        { n:'5', title:'Вертикальна складова (підйом) F_v',
+          formula:'F_v = (q_рух + q_ван) · g · H',
+          sub:`(${fmt(qc+qn+qa,2)} + ${fmt(qload,2)}) · 9,81 · ${fmt(H,3)}`,
+          result:`F_v = ${fmt(Fv,0)} Н` },
+        { n:'6', title:'Сумарне тягове зусилля F',
+          formula:'F = F_роб + F_хол + F_v',
+          sub:`${fmt(Fgo,0)} + ${fmt(Fret,0)} + ${fmt(Fv,0)}`,
+          result:`F = ${fmt(Ftot,0)} Н = ${fmt(Ftot/1000,3)} кН` },
+        { n:'7', title:'Потужність приводу P',
+          formula:'P = F · v / η · k',
+          sub:`${fmt(Ftot,0)} · ${v} / ${eta} · ${k} / 1000`,
+          result:`P = ${fmt(Pm,3)} кВт` },
+        { n:'8', title:'Крутний момент та частота обертання зірочки',
+          formula:'M = F · d_s / 2 ;  n = 60 · v / (π · d_s)',
+          sub:`M = ${fmt(Ftot,0)} · ${fmt(ds,4)} / 2 ;  n = 60 · ${v} / (π · ${fmt(ds,4)})`,
+          result:`M = ${fmt(M,0)} Н·м ;  n = ${fmt(nSp,1)} об/хв` },
+        { n:'9', title:'Перевірка ланцюга на розривне навантаження',
+          formula:'Запас = F_розр / F_один_ланцюг  (норма ≥ 8–10)',
+          sub:`${fmt(Fbreak/1000,1)} кН / (${fmt(Ftot/1000,3)} кН / ${nCh})`,
+          result:`Запас = ${fmt(safety,1)} ×` },
+      ];
 
       showResults(`
 <div class="res-hl"><span class="big">${fmt(Pm,2)} кВт</span><span class="lbl">Потужність приводу · запас ×${k}</span></div>
@@ -779,7 +934,6 @@ ${safety < 8
 </div>
 <button class="calc-btn" onclick="CALCS.chain_scraper.run()">Розрахувати</button>`,
     run() {
-      _m.inputs = { 'L, мм': num('c_L'), 'H, мм': num('c_H'), 'B, м': num('c_B'), 'rho, т/м3': num('c_rho'), 'h, мм': num('c_h'), 'v, м/с': num('c_v'), 'qc, кг/м': num('c_qc'), 'f': num('c_f'), 'eta': num('c_eta'), 'k': num('c_k') };
       const L = num('c_L') / 1000, H = num('c_H') / 1000, B = num('c_B');
       const rho = num('c_rho'), h = num('c_h') / 1000, v = num('c_v');
       const qc = num('c_qc'), f = num('c_f'), eta = num('c_eta'), k = num('c_k');
@@ -794,6 +948,54 @@ ${safety < 8
       const Q = qm*v*3.6;
       const Pm = (Ftot*v/eta)*k/1000;
       const Fmax = Ftot*1.1;
+
+      _m.inputs = [
+        ['Довжина L', num('c_L'), 'мм'],
+        ['Висота підйому H', num('c_H'), 'мм'],
+        ['Ширина жолоба B', (B*1000).toFixed(0), 'мм'],
+        ['Висота шару матеріалу h', num('c_h'), 'мм'],
+        ['Насипна щільність ρ', rho, 'т/м³'],
+        ['Швидкість v', v, 'м/с'],
+        ['Маса ланцюга + скребків q_c', qc, 'кг/м'],
+        ['Коеф. тертя f', f, ''],
+        ['ККД привода η', eta, ''],
+        ['Запас потужності k', k, ''],
+      ];
+      _m.steps = [
+        { n:'1', title:'Кут нахилу β',
+          formula:'β = arctan(H / L)',
+          sub:`arctan(${fmt(H,2)} / ${fmt(L,2)})`,
+          result:`β = ${fmt(beta,1)} °` },
+        { n:'2', title:'Погонна маса матеріалу в жолобі q_m',
+          formula:'q_m = B · h · ρ · 1000',
+          sub:`${fmt(B,3)} · ${fmt(h,3)} · ${rho} · 1000`,
+          result:`q_m = ${fmt(qm,2)} кг/м ;  Q = q_m · v · 3,6 = ${fmt(Q,1)} т/год` },
+        { n:'3', title:'Тертя матеріалу по жолобу F_m',
+          formula:'F_m = f · q_m · g · L · cos β',
+          sub:`${f} · ${fmt(qm,2)} · 9,81 · ${fmt(L,2)} · cos ${fmt(beta,1)}°`,
+          result:`F_m = ${fmt(Fm,0)} Н` },
+        { n:'4', title:'Тертя ланцюга по жолобу (обидві гілки) F_c',
+          formula:'F_c = 2 · f · q_c · g · L · cos β',
+          sub:`2 · ${f} · ${qc} · 9,81 · ${fmt(L,2)} · cos ${fmt(beta,1)}°`,
+          result:`F_c = ${fmt(Fc+Fret,0)} Н` },
+        { n:'5', title:'Вертикальна складова (підйом) F_v',
+          formula:'F_v = (q_m + q_c) · g · H',
+          sub:`(${fmt(qm,2)} + ${qc}) · 9,81 · ${fmt(H,3)}`,
+          result:`F_v = ${fmt(Fv,0)} Н` },
+        { n:'6', title:'Сумарне тягове зусилля F',
+          formula:'F = F_m + F_c + F_v',
+          sub:`${fmt(Fm,0)} + ${fmt(Fc+Fret,0)} + ${fmt(Fv,0)}`,
+          result:`F = ${fmt(Ftot,0)} Н = ${fmt(Ftot/1000,3)} кН` },
+        { n:'7', title:'Максимальний натяг з динамічним коефіцієнтом',
+          formula:'F_max = F · 1,1',
+          sub:`${fmt(Ftot,0)} · 1,1`,
+          result:`F_max = ${fmt(Fmax,0)} Н ;  підбір ланцюга F_розр ≥ 8 · F_max = ${fmt(Fmax*8/1000,0)} кН` },
+        { n:'8', title:'Потужність приводу P',
+          formula:'P = F · v / η · k',
+          sub:`${fmt(Ftot,0)} · ${v} / ${eta} · ${k} / 1000`,
+          result:`P = ${fmt(Pm,3)} кВт` },
+      ];
+
       showResults(`
 <div class="res-hl"><span class="big">${fmt(Pm,2)} кВт</span><span class="lbl">Потужність приводу · запас ×${k}</span></div>
 <div class="rgroup"><div class="rgroup-t">Продуктивність</div>
@@ -912,7 +1114,6 @@ ${safety < 8
 </div>
 <button class="calc-btn" onclick="CALCS.roller.run()">Розрахувати</button>`,
     run() {
-      _m.inputs = { 'L, мм': num('r_L'), 'beta, deg': num('r_beta'), 'dr, мм': num('r_dr')*1000, 'm, кг': num('r_m'), 'l, мм': num('r_l'), 'a, мм': num('r_a'), 'mr, кг': num('r_mr'), 'f': num('r_f'), 'v, м/с': num('r_v'), 'mode': val('r_mode'), 'eta': num('r_eta') };
       const L = num('r_L') / 1000, beta = num('r_beta'), dr = num('r_dr');
       const m = num('r_m'), lc = num('r_l') / 1000, ag = num('r_a') / 1000;
       const mr = num('r_mr'), f = num('r_f'), v = num('r_v'), eta = num('r_eta');
@@ -929,6 +1130,50 @@ ${safety < 8
       const Pm = Ftug*v/eta/1000;
       const Fb = (mPerR+mr)*G;
       const gravOk = beta >= betaMinSimple;
+
+      _m.inputs = [
+        ['Довжина L', num('r_L'), 'мм'],
+        ['Кут нахилу β', beta, '°'],
+        ['Діаметр ролика d_r', (dr*1000).toFixed(0), 'мм'],
+        ['Маса одиниці m', m, 'кг'],
+        ['Довжина вантажу l', num('r_l'), 'мм'],
+        ['Проміжок між вантажами a', num('r_a'), 'мм'],
+        ['Маса ролика m_r', mr, 'кг'],
+        ['Коеф. опору кочення f', f, ''],
+        ['Швидкість v (привод)', v, 'м/с'],
+        ['Режим', val('r_mode') === 'gravity' ? 'гравітаційний' : 'приводний', ''],
+        ['ККД привода η', eta, ''],
+      ];
+      _m.steps = [
+        { n:'1', title:'Крок роликів (≥ 2 ролики під вантажем)',
+          formula:'крок = l / 2',
+          sub:`${num('r_l')} / 2`,
+          result:`крок = ${fmt(step*1000,0)} мм ;  кількість роликів = ${nR} шт` },
+        { n:'2', title:'Мінімальний кут для гравітаційного руху',
+          formula:'β_min ≈ arctan(f) + 0,5°  (запас на нерівності)',
+          sub:`arctan(${f}) + 0,5°`,
+          result:`β_min = ${fmt(betaMinSimple,1)} °` },
+        { n:'3', title:'Навантаження на один ролик F_рол',
+          formula:'F_рол = (m_вант_на_ролик + m_рол) · g',
+          sub:`де m_вант_на_ролик = m · крок / l = ${fmt(mPerR,2)} кг ;  F = (${fmt(mPerR,2)} + ${mr}) · 9,81`,
+          result:`F_рол = ${fmt(Fb,0)} Н` },
+        ...(mode === 'driven' ? [
+          { n:'4', title:'Тягове зусилля приводного конвеєра',
+            formula:'F = (q_ван + q_рол) · g · L · (f − sin β)',
+            sub:`(${fmt(qc,2)} + ${fmt(qr,2)}) · 9,81 · ${fmt(L,2)} · (${f} − sin ${beta}°)`,
+            result:`F = ${fmt(Ftug,0)} Н` },
+          { n:'5', title:'Потужність приводу',
+            formula:'P = F · v / η',
+            sub:`${fmt(Ftug,0)} · ${v} / ${eta} / 1000`,
+            result:`P = ${fmt(Pm,3)} кВт` },
+        ] : [
+          { n:'4', title:'Перевірка кута нахилу',
+            formula:'β_факт ≥ β_min ?',
+            sub:`${beta}° vs ${fmt(betaMinSimple,1)}°`,
+            result: gravOk ? `✓ ${beta}° ≥ ${fmt(betaMinSimple,1)}° — рух відбувається` : `✗ ${beta}° < ${fmt(betaMinSimple,1)}° — кут недостатній` },
+        ]),
+      ];
+
       showResults(`
 <div class="res-hl"><span class="big">${mode==='gravity' ? fmt(betaMinSimple,1)+'°' : fmt(Pm,2)+' кВт'}</span>
 <span class="lbl">${mode==='gravity' ? 'Мінімальний кут для самостійного руху' : 'Потужність приводу'}</span></div>
@@ -1032,7 +1277,6 @@ ${mode==='gravity'
 </div>
 <button class="calc-btn" onclick="CALCS.bucket_belt.run()">Розрахувати</button>`,
     run() {
-      _m.inputs = { 'H, мм': num('e_H'), 'i, л': num('e_i'), 'a, мм': num('e_a'), 'rho, т/м3': num('e_rho'), 'psi': num('e_psi'), 'v, м/с': num('e_v'), 'qt, кг/м': num('e_qt'), 'kz': num('e_kz'), 'eta': num('e_eta'), 'k': num('e_k') };
       const H = num('e_H') / 1000, i = num('e_i') / 1000, a = num('e_a') / 1000;
       const rho = num('e_rho'), psi = num('e_psi'), v = num('e_v');
       const qt = num('e_qt'), kz = num('e_kz'), eta = num('e_eta'), k = num('e_k');
@@ -1044,6 +1288,50 @@ ${mode==='gravity'
       const Ftotal = qm*G*H*kz;
       const Pm = (Ftotal*v/eta)*k/1000;
       const nB = Math.ceil(2*H/a);
+
+      _m.inputs = [
+        ['Висота підйому H', num('e_H'), 'мм'],
+        ['Місткість ковша i', num('e_i'), 'л'],
+        ['Крок ківшів a', num('e_a'), 'мм'],
+        ['Насипна щільність ρ', rho, 'т/м³'],
+        ['Коеф. заповнення ковша ψ', psi, ''],
+        ['Швидкість стрічки v', v, 'м/с'],
+        ['Маса 1 м стрічки з ківшами q_t', qt, 'кг/м'],
+        ['Коеф. зачерпування k_з', kz, ''],
+        ['ККД привода η', eta, ''],
+        ['Запас потужності k', k, ''],
+      ];
+      _m.steps = [
+        { n:'1', title:'Маса матеріалу в одному ковші m_B',
+          formula:'m_B = i · ψ · ρ · 1000',
+          sub:`${num('e_i')/1000} м³ · ${psi} · ${rho} · 1000`,
+          result:`m_B = ${fmt(mB,3)} кг` },
+        { n:'2', title:'Продуктивність елеватора Q',
+          formula:'Q = (m_B / a) · v · 3,6',
+          sub:`(${fmt(mB,3)} / ${fmt(a,3)}) · ${v} · 3,6`,
+          result:`Q = ${fmt(Q,2)} т/год` },
+        { n:'3', title:'Погонна маса матеріалу q_m',
+          formula:'q_m = m_B / a',
+          sub:`${fmt(mB,3)} / ${fmt(a,3)}`,
+          result:`q_m = ${fmt(qm,3)} кг/м` },
+        { n:'4', title:'Кількість ківшів на елеваторі',
+          formula:'n_B = ⌈2 · H / a⌉',
+          sub:`⌈2 · ${fmt(H,2)} / ${fmt(a,3)}⌉`,
+          result:`n_B = ${nB} шт` },
+        { n:'5', title:'Корисне тягове зусилля (підйом матеріалу)',
+          formula:'F_кор = q_m · g · H',
+          sub:`${fmt(qm,3)} · 9,81 · ${fmt(H,2)}`,
+          result:`F_кор = ${fmt(Fuse,0)} Н = ${fmt(Fuse/1000,3)} кН` },
+        { n:'6', title:'Розрахункове зусилля з урахуванням зачерпування',
+          formula:'F = q_m · g · H · k_з',
+          sub:`${fmt(qm,3)} · 9,81 · ${fmt(H,2)} · ${kz}`,
+          result:`F = ${fmt(Ftotal,0)} Н = ${fmt(Ftotal/1000,3)} кН` },
+        { n:'7', title:'Потужність приводу',
+          formula:'P = F · v / η · k  =  Q · g · H · k_з / (367 · η) · k',
+          sub:`${fmt(Ftotal,0)} · ${v} / ${eta} · ${k} / 1000`,
+          result:`P = ${fmt(Pm,3)} кВт` },
+      ];
+
       showResults(`
 <div class="res-hl"><span class="big">${fmt(Pm,2)} кВт</span><span class="lbl">Потужність приводу · запас ×${k}</span></div>
 <div class="rgroup"><div class="rgroup-t">Продуктивність</div>

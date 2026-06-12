@@ -233,7 +233,7 @@ function makeSchema(type, inputs) {
 
 // ── Report download ───────────────────────────────────────────
 function downloadReport(opts) {
-  const { title, subtitle, schemaHtml, resultsHtml, inputRows } = opts;
+  const { title, subtitle, schemaHtml, resultsHtml, inputRows, steps } = opts;
   const date = new Date().toLocaleDateString('uk-UA');
 
   const css = `
@@ -251,6 +251,13 @@ th{background:#f5f5f5;font-weight:600;text-align:left}
 .v{font-family:monospace;font-weight:700}
 .schema-box{background:#f8f8f8;border:1px solid #ddd;border-radius:5px;padding:10px;text-align:center;margin:6px 0}
 .schema-box svg{width:100%;max-width:510px;filter:invert(1) hue-rotate(180deg) contrast(0.82)}
+.step{display:flex;gap:10px;margin-bottom:7px;padding:8px 10px;background:#fafafa;border:1px solid #eee;border-radius:4px}
+.step-n{font-family:monospace;font-weight:700;color:#fff;background:#e8a317;border-radius:3px;padding:2px 7px;font-size:11px;min-width:24px;text-align:center;height:fit-content;margin-top:1px;white-space:nowrap}
+.step-body{flex:1;min-width:0}
+.step-body strong{font-size:11px;color:#222;display:block;margin-bottom:4px}
+.step-formula{font-family:monospace;font-size:11px;color:#333;background:#f0f0f0;padding:3px 7px;border-left:3px solid #e8a317;margin:3px 0;word-break:break-all}
+.step-sub{font-family:monospace;font-size:10.5px;color:#666;padding:2px 7px 2px 10px;margin:2px 0;word-break:break-all}
+.step-result{font-family:monospace;font-size:12px;font-weight:700;color:#c87a00;margin-top:4px}
 .rgroup-t{font-family:monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:#c87a00;border-bottom:1px solid #f0c060;padding-bottom:3px;margin:10px 0 5px}
 .rrow{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #eee;font-size:11px}
 .rrow:last-child{border-bottom:none}.rk{color:#555;flex:1}
@@ -270,6 +277,18 @@ th{background:#f5f5f5;font-weight:600;text-align:left}
 .ft{margin-top:18px;border-top:1px solid #ddd;padding-top:8px;font-size:9.5px;color:#aaa;text-align:center}
 @media print{body{padding:8px 20px}}`;
 
+  const stepsHtml = (steps && steps.length) ? `
+<div class="sec">Хід розрахунку</div>
+${steps.map(s => `<div class="step">
+  <div class="step-n">${s.n}</div>
+  <div class="step-body">
+    <strong>${s.title}</strong>
+    <div class="step-formula">${s.formula}</div>
+    <div class="step-sub">= ${s.sub}</div>
+    <div class="step-result">→ ${s.result}</div>
+  </div>
+</div>`).join('')}` : '';
+
   const w = window.open('', '_blank');
   w.document.write(`<!DOCTYPE html><html lang="uk"><head>
 <meta charset="UTF-8"><title>${title} — Розрахунок EngCalc</title>
@@ -284,7 +303,8 @@ ${(inputRows||[]).map(r=>`<tr><td>${r[0]}</td><td class="v">${r[1]}</td><td>${r[
 </table>
 <div class="sec">Принципова схема</div>
 <div class="schema-box">${schemaHtml||'<p style="color:#aaa;padding:16px">—</p>'}</div>
-<div class="sec">Результати розрахунку</div>
+${stepsHtml}
+<div class="sec">Підсумкові результати</div>
 ${resultsHtml||''}
 <div class="ft">EngCalc · Результати є передпроєктними. Для робочого проєкту виконуйте перевірочний розрахунок за чинними стандартами ISO / DIN / ДСТУ.</div>
 <script>window.onload=()=>window.print()<\/script>
