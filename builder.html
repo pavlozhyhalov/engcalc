@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конфігуратор — ConveyorCalc</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><b>Conveyor</b>Calc</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Каталог</a>
+      <a href="builder.html" class="nav-link active">Конфігуратор</a>
+    </div>
+    <span class="nav-meta">ISO · DIN · CEMA · ДСТУ</span>
+  </div>
+</nav>
+
+<header class="calc-header">
+  <div class="crumbs"><a href="index.html">Каталог</a> / Конфігуратор</div>
+  <h1 class="calc-title">Конфігуратор нестандартного конвеєра</h1>
+  <p class="calc-sub">Зберіть схему свого механізму крок за кроком — від типу привода до несучого елементу. Калькулятор побудує модель і розрахує всі вузли.</p>
+</header>
+
+<main class="builder-page">
+
+  <section class="bstep">
+    <div class="bstep-head">
+      <span class="bstep-n">01</span>
+      <div><div class="bstep-t">Тип привода</div><div class="bstep-d">Джерело руху</div></div>
+    </div>
+    <div class="opts" data-group="drive">
+      <div class="opt selected" data-val="motred"><span class="opt-n">Мотор-редуктор</span><span class="opt-d">Єдиний блок. Компактний, простий монтаж. Найпоширеніший варіант.</span></div>
+      <div class="opt" data-val="motor_reducer"><span class="opt-n">Двигун + окремий редуктор</span><span class="opt-d">Більший момент, ремонтопридатність, гнучкість компоновки.</span></div>
+      <div class="opt" data-val="hydraulic"><span class="opt-n">Гідромотор</span><span class="opt-d">Плавне регулювання, великий момент на низьких обертах.</span></div>
+      <div class="opt" data-val="vfd"><span class="opt-n">Двигун + частотний перетворювач</span><span class="opt-d">Регульована швидкість, плавний пуск, захист від перевантаження.</span></div>
+    </div>
+  </section>
+
+  <section class="bstep">
+    <div class="bstep-head">
+      <span class="bstep-n">02</span>
+      <div><div class="bstep-t">Конфігурація приводного вала</div><div class="bstep-d">Передача руху на тяговий орган</div></div>
+    </div>
+    <div class="opts" data-group="shaft">
+      <div class="opt selected" data-val="cross_shaft"><span class="opt-n">Поперечний вал + 2 зірочки</span><span class="opt-d">Вал поперек конвеєра з зірочками по краях. Для двох паралельних ланцюгів.</span></div>
+      <div class="opt" data-val="single_sprocket"><span class="opt-n">Одна центральна зірочка</span><span class="opt-d">Один ланцюг по центру. Просто, але можливий перекіс несучої частини.</span></div>
+      <div class="opt" data-val="drum"><span class="opt-n">Приводний барабан</span><span class="opt-d">Для стрічки або суцільної сітки без ланцюгів. Передача тертям.</span></div>
+      <div class="opt" data-val="two_drives"><span class="opt-n">Два синхронізованих приводи</span><span class="opt-d">По приводу на кожен ланцюг. Широкі та важкі конвеєри.</span></div>
+    </div>
+  </section>
+
+  <section class="bstep">
+    <div class="bstep-head">
+      <span class="bstep-n">03</span>
+      <div><div class="bstep-t">Тяговий орган</div><div class="bstep-d">Елемент, що передає зусилля</div></div>
+    </div>
+    <div class="opts" data-group="traction">
+      <div class="opt" data-val="roller_chain"><span class="opt-n">Роликовий ланцюг (ISO 606)</span><span class="opt-d">Серії 08B–32B. Компактний, точний крок, доступний.</span></div>
+      <div class="opt selected" data-val="conveyor_chain"><span class="opt-n">Конвеєрний ланцюг (DIN 8167)</span><span class="opt-d">Подовжений крок, кріплення для поперечних елементів.</span></div>
+      <div class="opt" data-val="belt"><span class="opt-n">Стрічка (гума / ПВХ / ПУ)</span><span class="opt-d">Для барабанного привода. Тихий хід, харчове виконання.</span></div>
+      <div class="opt" data-val="rope"><span class="opt-n">Сталевий канат</span><span class="opt-d">Підвісні та канатні системи, великі прогони.</span></div>
+    </div>
+  </section>
+
+  <section class="bstep">
+    <div class="bstep-head">
+      <span class="bstep-n">04</span>
+      <div><div class="bstep-t">Несучий елемент</div><div class="bstep-d">Що безпосередньо несе вантаж</div></div>
+    </div>
+    <div class="opts" data-group="carrier">
+      <div class="opt selected" data-val="rods"><span class="opt-n">Поперечні прути</span><span class="opt-d">Прути з'єднують два ланцюги. Відкрита конструкція, дренаж.</span></div>
+      <div class="opt" data-val="mesh"><span class="opt-n">Металева сітка</span><span class="opt-d">Плетена або зварна на прутах. Харчова, термообробка, мийка.</span></div>
+      <div class="opt" data-val="plates"><span class="opt-n">Пластини</span><span class="opt-d">Суцільний настил. Важкі та гострі вантажі.</span></div>
+      <div class="opt" data-val="slats"><span class="opt-n">Планки</span><span class="opt-d">Поперечні планки з зазором. Вентиляція.</span></div>
+      <div class="opt" data-val="buckets"><span class="opt-n">Ковші</span><span class="opt-d">Підйом сипучих. Елеваторна схема.</span></div>
+      <div class="opt" data-val="scrapers"><span class="opt-n">Скребки</span><span class="opt-d">Штовхають матеріал по жолобу.</span></div>
+    </div>
+  </section>
+
+  <section class="bstep">
+    <div class="bstep-head">
+      <span class="bstep-n">05</span>
+      <div><div class="bstep-t">Напрямні / опори тягового органу</div><div class="bstep-d">Визначає коефіцієнт тертя</div></div>
+    </div>
+    <div class="opts" data-group="guide">
+      <div class="opt selected" data-val="slide_steel" data-f="0.15"><span class="opt-n">Ковзання по сталі</span><span class="opt-d">f ≈ 0.15. Просто і дешево, знос при абразиві.</span></div>
+      <div class="opt" data-val="slide_ss" data-f="0.20"><span class="opt-n">Нержавійка по нержавійці</span><span class="opt-d">f ≈ 0.20. Харчові виробництва без мастила.</span></div>
+      <div class="opt" data-val="slide_pe" data-f="0.08"><span class="opt-n">UHMW-PE напрямні</span><span class="opt-d">f ≈ 0.08. Тихий хід, хімічна стійкість.</span></div>
+      <div class="opt" data-val="roller_track" data-f="0.05"><span class="opt-n">Роликовий ланцюг по рейці</span><span class="opt-d">f ≈ 0.05. Мінімальне тертя, висока точність.</span></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="bstep">
+    <div class="bstep-head">
+      <span class="bstep-n">06</span>
+      <div><div class="bstep-t">Параметри</div></div>
+    </div>
+
+    <div class="flabel" style="margin-top:8px">Геометрія</div>
+    <div class="fgrid">
+      <div class="field"><label>Довжина <i>L</i></label>
+        <div class="control"><input id="p_L" type="number" value="8" min="0.5"><span class="unit">м</span></div></div>
+      <div class="field"><label>Висота підйому <i>H</i></label>
+        <div class="control"><input id="p_H" type="number" value="0" min="-10"><span class="unit">м</span></div></div>
+      <div class="field"><label>Ширина несучої частини <i>B</i></label>
+        <div class="control"><input id="p_B" type="number" value="0.6" step="0.05" min="0.1"><span class="unit">м</span></div></div>
+    </div>
+
+    <div class="flabel" style="margin-top:20px">Вантаж</div>
+    <div class="fgrid">
+      <div class="field"><label>Тип завантаження</label>
+        <div class="control"><select id="p_loadtype">
+          <option value="unit" selected>Штучний (кг/шт + крок)</option>
+          <option value="flow">Масовий потік (т/год)</option>
+          <option value="area">Розподілений (кг/м²)</option>
+        </select></div></div>
+      <div class="field"><label>Навантаження</label>
+        <div class="control"><input id="p_load" type="number" value="3" step="0.5" min="0.1"><span class="unit">кг · т/год · кг/м²</span></div></div>
+      <div class="field"><label>Крок вантажів <i>a</i></label>
+        <div class="control"><input id="p_pitch" type="number" value="0.4" step="0.05" min="0.05"><span class="unit">м</span></div></div>
+    </div>
+
+    <div class="flabel" style="margin-top:20px">Маса рухомих частин</div>
+    <div class="fgrid">
+      <div class="field"><label>Тяговий орган (сумарно) <i>q_t</i></label>
+        <div class="control"><input id="p_qt" type="number" value="6" step="0.5" min="0.5"><span class="unit">кг/м</span></div></div>
+      <div class="field"><label>Несучий елемент <i>q_n</i></label>
+        <div class="control"><input id="p_qn" type="number" value="8" step="0.5" min="0"><span class="unit">кг/м</span></div></div>
+      <div class="field"><label>Додаткові елементи <i>q_a</i></label>
+        <div class="control"><input id="p_qa" type="number" value="2" step="0.5" min="0"><span class="unit">кг/м</span></div></div>
+    </div>
+
+    <div class="flabel" style="margin-top:20px">Кінематика та привід</div>
+    <div class="fgrid">
+      <div class="field"><label>Швидкість <i>v</i></label>
+        <div class="control"><input id="p_v" type="number" value="0.15" step="0.01" min="0.01"><span class="unit">м/с</span></div></div>
+      <div class="field"><label>Коеф. тертя <i>f</i> (від кроку 05)</label>
+        <div class="control"><input id="p_f" type="number" value="0.15" step="0.01" min="0.01" max="0.8"></div></div>
+      <div class="field"><label>ККД привода <i>η</i></label>
+        <div class="control"><input id="p_eta" type="number" value="0.82" step="0.01" min="0.5" max="0.99"></div></div>
+    </div>
+    <div class="fgrid" style="margin-top:12px">
+      <div class="field"><label>Запас потужності <i>k</i></label>
+        <div class="control"><input id="p_k" type="number" value="1.4" step="0.05" min="1" max="2.5"></div></div>
+      <div class="field"><label>Діаметр зірочки/барабана <i>d_s</i></label>
+        <div class="control"><input id="p_ds" type="number" value="0.16" step="0.005" min="0.04"><span class="unit">м</span></div></div>
+      <div class="field"><label>Розривне навантаження тягового органу</label>
+        <div class="control"><input id="p_fbreak" type="number" value="28.5" step="0.5" min="1"><span class="unit">кН</span></div></div>
+    </div>
+  </section>
+
+  <div class="summary" id="summary"></div>
+
+  <button class="calc-btn" onclick="runBuilder()">Розрахувати конфігурацію</button>
+
+  <section class="bres" id="bres">
+    <div class="divider"></div>
+    <div class="flabel">Результати розрахунку</div>
+    <div id="bres-content"></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>ConveyorCalc — конфігуратор нестандартних схем</span>
+    <span>Методика: тяговий розрахунок за гілками + перевірка вузлів</span>
+  </div>
+</footer>
+
+<script src="js/builder.js"></script>
+</body>
+</html>

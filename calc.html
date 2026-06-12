@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Розрахунок — ConveyorCalc</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><b>Conveyor</b>Calc</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Каталог</a>
+      <a href="builder.html" class="nav-link">Конфігуратор</a>
+    </div>
+    <span class="nav-meta">ISO · DIN · CEMA · ДСТУ</span>
+  </div>
+</nav>
+
+<header class="calc-header">
+  <div class="crumbs"><a href="index.html">Каталог</a> / <span id="crumb-type">…</span></div>
+  <h1 class="calc-title" id="calc-title">…</h1>
+  <p class="calc-sub" id="calc-sub"></p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" id="tab-calc" onclick="switchTab('calc')">РОЗРАХУНОК</div>
+  <div class="tab" id="tab-sources" onclick="switchTab('sources')">ДЖЕРЕЛА / СТАНДАРТИ</div>
+  <div class="tab" id="tab-example" onclick="switchTab('example')">ПРИКЛАД РОЗРАХУНКУ</div>
+</div>
+
+<div class="calc-body">
+
+  <div class="tab-panel active" id="panel-calc">
+    <div class="calc-grid">
+      <div class="panel" id="form-area"></div>
+      <div class="panel sticky">
+        <div class="res-empty" id="res-empty">
+          <span style="font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted)">РЕЗУЛЬТАТИ</span>
+          <span>Заповніть параметри та натисніть «Розрахувати»</span>
+        </div>
+        <div id="res-content" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panel-sources">
+    <div class="sources" id="sources-area"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-example">
+    <div class="example" id="example-area"></div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>ConveyorCalc — інженерний розрахунок транспортних механізмів</span>
+    <span>Результати є передпроєктними. Для робочого проєкту виконуйте перевірочний розрахунок.</span>
+  </div>
+</footer>
+
+<script src="js/calc.js"></script>
+</body>
+</html>
