@@ -905,3 +905,41 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .hero-actions .btn { text-align: center; justify-content: center; }
   .footer-inner { flex-direction: column; gap: 8px; }
 }
+
+/* ── Schema & Report ─────────────────────────────────────────── */
+.calc-schema {
+  margin-top: 28px;
+  padding: 20px;
+  background: var(--surface);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+.calc-schema-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+.calc-schema svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.report-btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px 24px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity .18s;
+}
+.report-btn:hover { opacity: .85; }
+.report-btn:active { opacity: .7; }

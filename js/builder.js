@@ -167,8 +167,28 @@ function runBuilder() {
 <div class="note info">${shaftNote}</div>
 ${safety < 8
   ? `<div class="note warn">Запас міцності ${fmt(safety, 1)}× нижче норми 8–10× для конвеєрних ланцюгів. Виберіть тяговий орган з більшим розривним навантаженням.</div>`
-  : `<div class="note ok">Запас міцності тягового органу ${fmt(safety, 0)}× — достатній (норма ≥ 8–10×).</div>`}`;
+  : `<div class="note ok">Запас міцності тягового органу ${fmt(safety, 0)}× — достатній (норма ≥ 8–10×).</div>`}
+${(typeof makeSchema === 'function') ? `<div class="calc-schema"><div class="calc-schema-lbl">ПРИНЦИПОВА СХЕМА</div>${makeSchema('builder', { state, labels: LABELS })}</div>` : ''}
+<button class="report-btn" onclick="_builderReport()">⬇ Завантажити розрахунок</button>`;
 
   $id('bres').classList.add('visible');
   $id('bres').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function _builderReport() {
+  if (typeof downloadReport !== 'function') return;
+  const content = $id('bres-content');
+  const schemaEl = content ? content.querySelector('.calc-schema') : null;
+  const schemaHtml = schemaEl ? schemaEl.innerHTML : '';
+  const resultsHtml = content ? content.innerHTML : '';
+  downloadReport({
+    title: 'Конфігуратор конвеєра',
+    subtitle: 'Нестандартний конвеєр — попередній розрахунок',
+    schemaHtml,
+    resultsHtml,
+    inputRows: [
+      ['L, мм', num('p_L')], ['H, мм', num('p_H')], ['B, мм', num('p_B')],
+      ['v, м/с', num('p_v')], ['η', num('p_eta')], ['k', num('p_k')]
+    ]
+  });
 }

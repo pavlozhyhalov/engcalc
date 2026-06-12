@@ -12,6 +12,20 @@ const val = (id) => $id(id)?.value || '';
 const fmt = (v, d = 2) => (isNaN(v) || !isFinite(v)) ? '—' : v.toFixed(d);
 const G = 9.81;
 
+let _m = { type: '', inputs: {}, resultsHtml: '', schemaHtml: '' };
+
+function _dlReport() {
+  if (typeof downloadReport !== 'function') return;
+  const C = getCalc(_m.type);
+  downloadReport({
+    title: C.title,
+    subtitle: C.subtitle || '',
+    schemaHtml: _m.schemaHtml,
+    resultsHtml: _m.resultsHtml,
+    inputRows: Object.entries(_m.inputs).map(([k,v]) => [k, v])
+  });
+}
+
 const MATERIALS = `
 <option value="">— вибрати —</option>
 <option value="0.55">Зерно пшениця (0.55)</option>
@@ -36,7 +50,15 @@ function applyPreset(selId, rhoId) {
 function showResults(html) {
   const empty = $id('res-empty'), box = $id('res-content');
   if (empty) empty.style.display = 'none';
-  if (box) { box.style.display = 'block'; box.innerHTML = html; }
+  if (box) {
+    box.style.display = 'block';
+    _m.resultsHtml = html;
+    const svgHtml = (typeof makeSchema === 'function') ? makeSchema(_m.type, _m.inputs) : '';
+    _m.schemaHtml = svgHtml;
+    box.innerHTML = html
+      + (svgHtml ? `<div class="calc-schema"><div class="calc-schema-lbl">ПРИНЦИПОВА СХЕМА</div>${svgHtml}</div>` : '')
+      + `<button class="report-btn" onclick="_dlReport()">⬇ Завантажити розрахунок</button>`;
+  }
 }
 
 // ============================================================
@@ -111,6 +133,7 @@ const CALCS = {
 <button class="calc-btn" onclick="CALCS.belt.run()">Розрахувати</button>`,
 
     run() {
+      _m.inputs = { L_мм: num('b_L'), H_мм: num('b_H'), β_°: num('b_beta') || 'авто', B_мм: num('b_B')*1000, v_мс: num('b_v'), Q_тгод: num('b_Q'), ρ_тм3: num('b_rho'), φ_°: num('b_phi'), η: num('b_eta'), ω: num('b_omega'), k_z: num('b_kz') };
       const L = num('b_L') / 1000, H = num('b_H') / 1000, rho = num('b_rho');
       const phi = num('b_phi') * Math.PI / 180;
       const Q = num('b_Q'), v = num('b_v'), B = num('b_B');
@@ -330,6 +353,7 @@ ${Qth < Q * 0.95
 <button class="calc-btn" onclick="CALCS.screw.run()">Розрахувати</button>`,
 
     run() {
+      _m.inputs = { L_мм: num('s_L'), β_°: num('s_beta'), D_мм: num('s_D')*1000, ρ_тм3: num('s_rho'), ψ: parseFloat(val('s_psi')), Q_тгод: num('s_Q'), n_обхв: num('s_n'), C_m: parseFloat(val('s_Cm')), η: num('s_eta'), k: num('s_k') };
       const L = num('s_L') / 1000, beta = num('s_beta'), D = num('s_D'), rho = num('s_rho');
       const psi = parseFloat(val('s_psi'));
       const Q = num('s_Q'), n = num('s_n');
@@ -547,6 +571,7 @@ ${Qa < Q*0.95 ? `<div class="note warn">Фактична подача ${fmt(Qa,1
 <button class="calc-btn" onclick="CALCS.mesh_chain.run()">Розрахувати</button>`,
 
     run() {
+      _m.inputs = { L_мм: num('m_L'), H_мм: num('m_H'), B_мм: num('m_B'), v_мс: num('m_v'), f: parseFloat(val('m_f')), η: num('m_eta'), k: num('m_k'), d_s_мм: num('m_ds'), 'ланцюгів': parseFloat(val('m_chains')) };
       const L = num('m_L') / 1000, H = num('m_H') / 1000, B = num('m_B') / 1000;
       const v = num('m_v'), f = parseFloat(val('m_f'));
       const eta = num('m_eta'), k = num('m_k'), ds = num('m_ds') / 1000;
@@ -754,6 +779,7 @@ ${safety < 8
 </div>
 <button class="calc-btn" onclick="CALCS.chain_scraper.run()">Розрахувати</button>`,
     run() {
+      _m.inputs = { L_мм: num('c_L'), H_мм: num('c_H'), B_м: num('c_B'), ρ_тм3: num('c_rho'), h_мм: num('c_h'), v_мс: num('c_v'), q_c_кгм: num('c_qc'), f: num('c_f'), η: num('c_eta'), k: num('c_k') };
       const L = num('c_L') / 1000, H = num('c_H') / 1000, B = num('c_B');
       const rho = num('c_rho'), h = num('c_h') / 1000, v = num('c_v');
       const qc = num('c_qc'), f = num('c_f'), eta = num('c_eta'), k = num('c_k');
@@ -886,6 +912,7 @@ ${safety < 8
 </div>
 <button class="calc-btn" onclick="CALCS.roller.run()">Розрахувати</button>`,
     run() {
+      _m.inputs = { L_мм: num('r_L'), β_°: num('r_beta'), d_r_мм: num('r_dr')*1000, m_кг: num('r_m'), l_мм: num('r_l'), a_мм: num('r_a'), m_r_кг: num('r_mr'), f: num('r_f'), v_мс: num('r_v'), режим: val('r_mode'), η: num('r_eta') };
       const L = num('r_L') / 1000, beta = num('r_beta'), dr = num('r_dr');
       const m = num('r_m'), lc = num('r_l') / 1000, ag = num('r_a') / 1000;
       const mr = num('r_mr'), f = num('r_f'), v = num('r_v'), eta = num('r_eta');
@@ -1005,6 +1032,7 @@ ${mode==='gravity'
 </div>
 <button class="calc-btn" onclick="CALCS.bucket_belt.run()">Розрахувати</button>`,
     run() {
+      _m.inputs = { H_мм: num('e_H'), i_л: num('e_i'), a_мм: num('e_a'), ρ_тм3: num('e_rho'), ψ: num('e_psi'), v_мс: num('e_v'), q_t_кгм: num('e_qt'), k_з: num('e_kz'), η: num('e_eta'), k: num('e_k') };
       const H = num('e_H') / 1000, i = num('e_i') / 1000, a = num('e_a') / 1000;
       const rho = num('e_rho'), psi = num('e_psi'), v = num('e_v');
       const qt = num('e_qt'), kz = num('e_kz'), eta = num('e_eta'), k = num('e_k');
@@ -1111,6 +1139,7 @@ function switchTab(name) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const type = new URLSearchParams(location.search).get('type') || 'belt';
+  _m.type = type;
   const C = getCalc(type);
   document.title = C.title + ' — EngCalc';
   $id('calc-title').textContent = C.title;
