@@ -3,191 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Інженерний розрахунок конвеєрів, елеваторів та транспортних механізмів за стандартами ISO, DIN, CEMA, ДСТУ">
-<title>ConveyorCalc — Розрахунок транспортних механізмів</title>
+<meta name="description" content="Інженерний розрахунок конвеєрів, елеваторів та транспортних механізмів">
+<title>EngCalc — Інженерний розрахунок механізмів</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="brand"><b>Conveyor</b>Calc</a>
+    <a href="index.html" class="brand"><b>Eng</b>Calc</a>
     <div class="nav-links">
       <a href="index.html" class="nav-link active">Каталог</a>
       <a href="builder.html" class="nav-link">Конфігуратор</a>
     </div>
-    <span class="nav-meta">ISO · DIN · CEMA · ДСТУ</span>
   </div>
 </nav>
 
 <header class="hero">
   <div class="hero-eyebrow">Інженерний калькулятор</div>
-  <h1>Розрахунок <strong>транспортних механізмів</strong> за міжнародними стандартами</h1>
+  <h1>Розрахунок <strong>транспортних механізмів</strong></h1>
   <p>Тягове зусилля, потужність привода, навантаження на вузли. Кожна методика — з посиланнями на стандарти та перевіреними прикладами з технічної літератури.</p>
   <div class="hero-actions">
     <a href="#catalog" class="btn btn-primary">Обрати механізм</a>
     <a href="builder.html" class="btn btn-ghost">Конфігуратор нестандартного</a>
   </div>
   <div class="hero-stats">
-    <div class="stat"><div class="n">18</div><div class="l">типів механізмів</div></div>
-    <div class="stat"><div class="n">4</div><div class="l">категорії</div></div>
-    <div class="stat"><div class="n">12+</div><div class="l">стандартів і джерел</div></div>
+    <div class="stat reveal"><div class="n">18</div><div class="l">типів механізмів</div></div>
+    <div class="stat reveal"><div class="n">4</div><div class="l">категорії</div></div>
+    <div class="stat reveal"><div class="n">12+</div><div class="l">стандартів і джерел</div></div>
   </div>
 </header>
 
 <main class="catalog" id="catalog">
 
-  <!-- ГОРИЗОНТАЛЬНІ / ПОХИЛІ -->
-  <section class="cat">
-    <div class="cat-head">
-      <h2>Конвеєри горизонтальні та похилі</h2>
-      <span class="cat-en">Horizontal / Inclined</span>
-      <span class="cat-count">8 типів</span>
-    </div>
-    <div class="grid">
-      <a href="calc.html?type=belt" class="tile">
-        <span class="tile-name">Стрічковий</span>
-        <span class="tile-desc">Гумова або ПВХ стрічка на роликових опорах. Сипучі та штучні вантажі, найпоширеніший тип.</span>
-        <div class="tile-foot"><span class="tile-stds">ISO 5048 · DIN 22101 · CEMA</span><span class="tile-go">розрахунок →</span></div>
-      </a>
-      <a href="calc.html?type=screw" class="tile">
-        <span class="tile-name">Шнековий (гвинтовий)</span>
-        <span class="tile-desc">Гвинт у закритому жолобі або трубі. Герметичний транспорт порошків і дрібнозернистих матеріалів.</span>
-        <div class="tile-foot"><span class="tile-stds">CEMA 350 · ДСТУ 2804</span><span class="tile-go">розрахунок →</span></div>
-      </a>
-      <a href="calc.html?type=chain_scraper" class="tile">
-        <span class="tile-name">Скребковий</span>
-        <span class="tile-desc">Ланцюг зі скребками тягне матеріал по жолобу. Важкі, гарячі та абразивні матеріали.</span>
-        <div class="tile-foot"><span class="tile-stds">FEM · ДСТУ</span><span class="tile-go">розрахунок →</span></div>
-      </a>
-      <a href="calc.html?type=mesh_chain" class="tile featured">
-        <span class="tile-badge">Популярний</span>
-        <span class="tile-name">Ланцюговий із сіткою / прутами</span>
-        <span class="tile-desc">Два паралельних ланцюги, з'єднані прутами або сіткою. Харчова промисловість, термообробка, мийка.</span>
-        <div class="tile-foot"><span class="tile-stds">ISO 606 · DIN 8167</span><span class="tile-go">розрахунок →</span></div>
-      </a>
-      <a href="calc.html?type=plate" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Пластинчастий</span>
-        <span class="tile-desc">Металеві пластини на двох тягових ланцюгах. Штучні вантажі, гарячий матеріал.</span>
-        <div class="tile-foot"><span class="tile-stds">DIN 8167</span></div>
-      </a>
-      <a href="calc.html?type=roller" class="tile">
-        <span class="tile-name">Роликовий</span>
-        <span class="tile-desc">Гравітаційний або приводний рух штучних вантажів по рядах роликів.</span>
-        <div class="tile-foot"><span class="tile-stds">ISO 1537</span><span class="tile-go">розрахунок →</span></div>
-      </a>
-      <a href="calc.html?type=drag" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Волочильний (En-masse)</span>
-        <span class="tile-desc">Транспортування у щільному шарі. Зерно, цемент, гранули.</span>
-        <div class="tile-foot"><span class="tile-stds">CEMA 550</span></div>
-      </a>
-      <a href="calc.html?type=belt_trough" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Стрічковий жолобчатий</span>
-        <span class="tile-desc">Трироликова жолобчаста опора для великих об'ємів сипучих матеріалів.</span>
-        <div class="tile-foot"><span class="tile-stds">ISO 5048 · DIN 22101</span></div>
-      </a>
-    </div>
-  </section>
+  <div class="cat-grid">
 
-  <!-- ВЕРТИКАЛЬНІ -->
-  <section class="cat">
-    <div class="cat-head">
-      <h2>Вертикальний транспорт</h2>
-      <span class="cat-en">Vertical / Elevating</span>
-      <span class="cat-count">4 типи</span>
-    </div>
-    <div class="grid">
-      <a href="calc.html?type=bucket_belt" class="tile">
-        <span class="tile-name">Ківшевий елеватор (стрічка)</span>
-        <span class="tile-desc">Ковші на гумовій стрічці. Сипучі матеріали, велика висота, висока швидкість.</span>
-        <div class="tile-foot"><span class="tile-stds">FEM 2.122 · ISO 5052</span><span class="tile-go">розрахунок →</span></div>
-      </a>
-      <a href="calc.html?type=bucket_chain" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Ківшевий елеватор (ланцюг)</span>
-        <span class="tile-desc">Ковші на тяговому ланцюгу. Важкі, абразивні матеріали, низькі швидкості.</span>
-        <div class="tile-foot"><span class="tile-stds">FEM 2.122 · DIN 15236</span></div>
-      </a>
-      <a href="calc.html?type=screw_vertical" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Шнек вертикальний</span>
-        <span class="tile-desc">Вертикальний гвинтовий конвеєр. Мінімальна займана площа.</span>
-        <div class="tile-foot"><span class="tile-stds">CEMA 350</span></div>
-      </a>
-      <a href="calc.html?type=paternoster" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Люлечний (Paternoster)</span>
-        <span class="tile-desc">Підвісні люльки на замкнутому ланцюгу. Штучні вантажі.</span>
-        <div class="tile-foot"><span class="tile-stds">FEM</span></div>
-      </a>
-    </div>
-  </section>
+    <a href="types.html?cat=horizontal" class="cat-card reveal">
+      <div class="cat-card-head">
+        <span class="cat-card-num">01</span>
+        <span class="cat-card-count">8 типів</span>
+      </div>
+      <div class="cat-card-name">Горизонтальні та похилі конвеєри</div>
+      <div class="cat-card-en">Horizontal / Inclined</div>
+      <p class="cat-card-desc">Стрічкові, шнекові, скребкові, роликові та ланцюгові конвеєри для транспортування матеріалів по горизонталі і під кутом.</p>
+      <div class="cat-card-foot">
+        <span class="cat-card-types">Стрічковий · Шнековий · Скребковий · Роликовий</span>
+        <span class="cat-card-go">→</span>
+      </div>
+    </a>
 
-  <!-- ПІДВІСНІ -->
-  <section class="cat">
-    <div class="cat-head">
-      <h2>Підвісні та монорейкові</h2>
-      <span class="cat-en">Overhead / Monorail</span>
-      <span class="cat-count">2 типи</span>
-    </div>
-    <div class="grid">
-      <a href="calc.html?type=overhead_chain" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Підвісний ланцюговий</span>
-        <span class="tile-desc">Каретки на підвісному рейковому шляху з тяговим ланцюгом.</span>
-        <div class="tile-foot"><span class="tile-stds">FEM 9.811</span></div>
-      </a>
-      <a href="calc.html?type=power_free" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Power &amp; Free</span>
-        <span class="tile-desc">Двоколійна система з незалежними тяговим та вантажним шляхами.</span>
-        <div class="tile-foot"><span class="tile-stds">FEM 9.811</span></div>
-      </a>
-    </div>
-  </section>
+    <a href="types.html?cat=vertical" class="cat-card reveal">
+      <div class="cat-card-head">
+        <span class="cat-card-num">02</span>
+        <span class="cat-card-count">4 типи</span>
+      </div>
+      <div class="cat-card-name">Вертикальний транспорт</div>
+      <div class="cat-card-en">Vertical / Elevating</div>
+      <p class="cat-card-desc">Ківшеві елеватори на стрічці та ланцюгу, вертикальний шнек, люлечні підйомники. Великі висоти підйому.</p>
+      <div class="cat-card-foot">
+        <span class="cat-card-types">Ківшевий елеватор · Шнек вертикальний · Paternoster</span>
+        <span class="cat-card-go">→</span>
+      </div>
+    </a>
 
-  <!-- СПЕЦІАЛЬНІ -->
-  <section class="cat">
-    <div class="cat-head">
-      <h2>Спеціальні</h2>
-      <span class="cat-en">Special Purpose</span>
-      <span class="cat-count">4 типи</span>
-    </div>
-    <div class="grid">
-      <a href="calc.html?type=vibro" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Вібраційний</span>
-        <span class="tile-desc">Мікрокидки матеріалу при вібрації лотка. Точне дозування.</span>
-        <div class="tile-foot"><span class="tile-stds">ISO</span></div>
-      </a>
-      <a href="calc.html?type=pneumo" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Пневматичний</span>
-        <span class="tile-desc">Транспортування повітряним потоком у трубопроводі.</span>
-        <div class="tile-foot"><span class="tile-stds">ДСТУ</span></div>
-      </a>
-      <a href="calc.html?type=apron" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Фартушний (Apron)</span>
-        <span class="tile-desc">Важкі плити для крупнокускових матеріалів та гірської породи.</span>
-        <div class="tile-foot"><span class="tile-stds">CEMA · ISO</span></div>
-      </a>
-      <a href="calc.html?type=telescopic" class="tile soon">
-        <span class="tile-badge">Скоро</span>
-        <span class="tile-name">Телескопічний</span>
-        <span class="tile-desc">Висувні секції для завантаження фур та вагонів.</span>
-        <div class="tile-foot"><span class="tile-stds">FEM</span></div>
-      </a>
-    </div>
-  </section>
+    <a href="types.html?cat=overhead" class="cat-card reveal">
+      <div class="cat-card-head">
+        <span class="cat-card-num">03</span>
+        <span class="cat-card-count">2 типи</span>
+      </div>
+      <div class="cat-card-name">Підвісні та монорейкові</div>
+      <div class="cat-card-en">Overhead / Monorail</div>
+      <p class="cat-card-desc">Підвісні ланцюгові конвеєри та системи Power &amp; Free для транспортування виробів у підвісному стані.</p>
+      <div class="cat-card-foot">
+        <span class="cat-card-types">Підвісний ланцюговий · Power &amp; Free</span>
+        <span class="cat-card-go">→</span>
+      </div>
+    </a>
 
-  <div class="divider"></div>
+    <a href="types.html?cat=special" class="cat-card reveal">
+      <div class="cat-card-head">
+        <span class="cat-card-num">04</span>
+        <span class="cat-card-count">4 типи</span>
+      </div>
+      <div class="cat-card-name">Спеціальні</div>
+      <div class="cat-card-en">Special Purpose</div>
+      <p class="cat-card-desc">Вібраційні, пневматичні, фартушні та телескопічні конвеєри для нестандартних матеріалів і завдань.</p>
+      <div class="cat-card-foot">
+        <span class="cat-card-types">Вібраційний · Пневматичний · Фартушний · Телескопічний</span>
+        <span class="cat-card-go">→</span>
+      </div>
+    </a>
 
-  <!-- КОНФІГУРАТОР -->
-  <a href="builder.html" class="builder-banner">
+  </div>
+
+  <div class="divider reveal"></div>
+
+  <a href="builder.html" class="builder-banner reveal">
     <div class="bb-body">
       <h3>Конфігуратор нестандартного конвеєра</h3>
       <p>Зберіть власну схему: тип привода, конфігурація вала, тяговий орган, несучий елемент, напрямні. Калькулятор побудує модель і розрахує тягове зусилля, потужність та навантаження на кожен вузол.</p>
@@ -199,10 +110,11 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <span>ConveyorCalc — інженерний розрахунок транспортних механізмів</span>
+    <span>EngCalc — інженерний розрахунок транспортних механізмів</span>
     <span>ISO 5048 · DIN 22101 · CEMA · FEM 2.122 · ISO 606 · ДСТУ 2804</span>
   </div>
 </footer>
 
+<script src="js/ui.js"></script>
 </body>
 </html>

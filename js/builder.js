@@ -85,11 +85,11 @@ function renderSummary() {
 
 // ── calculation ──────────────────────────────────────────────
 function runBuilder() {
-  const L = num('p_L'), H = num('p_H'), B = num('p_B');
+  const L = num('p_L') / 1000, H = num('p_H') / 1000, B = num('p_B') / 1000;
   const v = num('p_v'), f = num('p_f'), eta = num('p_eta');
-  const k = num('p_k'), ds = num('p_ds');
+  const k = num('p_k'), ds = num('p_ds') / 1000;
   const qt = num('p_qt'), qn = num('p_qn'), qa = num('p_qa');
-  const loadType = val('p_loadtype'), loadVal = num('p_load'), pitch = num('p_pitch');
+  const loadType = val('p_loadtype'), loadVal = num('p_load'), pitch = num('p_pitch') / 1000;
   const Fbreak = num('p_fbreak') * 1000;
 
   const betaR = Math.atan2(H, Math.sqrt(Math.max(0.01, L * L - H * H)));

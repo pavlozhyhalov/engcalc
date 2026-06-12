@@ -55,9 +55,9 @@ const CALCS = {
   <div class="flabel">Геометрія траси</div>
   <div class="fgrid">
     <div class="field"><label>Довжина <i>L</i></label>
-      <div class="control"><input id="b_L" type="number" value="35" min="1"><span class="unit">м</span></div></div>
+      <div class="control"><input id="b_L" type="number" value="35000" min="100"><span class="unit">мм</span></div></div>
     <div class="field"><label>Висота підйому <i>H</i></label>
-      <div class="control"><input id="b_H" type="number" value="5" min="-40"><span class="unit">м</span></div></div>
+      <div class="control"><input id="b_H" type="number" value="5000" min="-40000"><span class="unit">мм</span></div></div>
     <div class="field"><label>Кут нахилу <i>β</i> (порожньо = авто)</label>
       <div class="control"><input id="b_beta" type="number" placeholder="авто" min="-35" max="35"><span class="unit">°</span></div></div>
   </div>
@@ -111,7 +111,7 @@ const CALCS = {
 <button class="calc-btn" onclick="CALCS.belt.run()">Розрахувати</button>`,
 
     run() {
-      const L = num('b_L'), H = num('b_H'), rho = num('b_rho');
+      const L = num('b_L') / 1000, H = num('b_H') / 1000, rho = num('b_rho');
       const phi = num('b_phi') * Math.PI / 180;
       const Q = num('b_Q'), v = num('b_v'), B = num('b_B');
       const qb = num('b_qb'), qro = num('b_qro'), qru = num('b_qru');
@@ -274,7 +274,7 @@ ${Qth < Q * 0.95
   <div class="flabel">Геометрія</div>
   <div class="fgrid">
     <div class="field"><label>Довжина <i>L</i></label>
-      <div class="control"><input id="s_L" type="number" value="12" min="0.5"><span class="unit">м</span></div></div>
+      <div class="control"><input id="s_L" type="number" value="12000" min="500"><span class="unit">мм</span></div></div>
     <div class="field"><label>Кут нахилу <i>β</i></label>
       <div class="control"><input id="s_beta" type="number" value="0" min="0" max="45"><span class="unit">°</span></div></div>
     <div class="field"><label>Діаметр шнека <i>D</i></label>
@@ -330,7 +330,7 @@ ${Qth < Q * 0.95
 <button class="calc-btn" onclick="CALCS.screw.run()">Розрахувати</button>`,
 
     run() {
-      const L = num('s_L'), beta = num('s_beta'), D = num('s_D'), rho = num('s_rho');
+      const L = num('s_L') / 1000, beta = num('s_beta'), D = num('s_D'), rho = num('s_rho');
       const psi = parseFloat(val('s_psi'));
       const Q = num('s_Q'), n = num('s_n');
       const Cm = parseFloat(val('s_Cm'));
@@ -494,11 +494,11 @@ ${Qa < Q*0.95 ? `<div class="note warn">Фактична подача ${fmt(Qa,1
   <div class="flabel">Геометрія</div>
   <div class="fgrid">
     <div class="field"><label>Довжина <i>L</i></label>
-      <div class="control"><input id="m_L" type="number" value="8" min="0.5"><span class="unit">м</span></div></div>
+      <div class="control"><input id="m_L" type="number" value="8000" min="500"><span class="unit">мм</span></div></div>
     <div class="field"><label>Висота підйому <i>H</i></label>
-      <div class="control"><input id="m_H" type="number" value="0" min="-5"><span class="unit">м</span></div></div>
+      <div class="control"><input id="m_H" type="number" value="0" min="-5000"><span class="unit">мм</span></div></div>
     <div class="field"><label>Ширина несучої частини <i>B</i></label>
-      <div class="control"><input id="m_B" type="number" value="0.6" step="0.05" min="0.1"><span class="unit">м</span></div></div>
+      <div class="control"><input id="m_B" type="number" value="600" step="50" min="100"><span class="unit">мм</span></div></div>
   </div>
 </div>
 <div class="fsection">
@@ -513,7 +513,7 @@ ${Qa < Q*0.95 ? `<div class="note warn">Фактична подача ${fmt(Qa,1
     <div class="field"><label>Навантаження</label>
       <div class="control"><input id="m_load" type="number" value="3" step="0.5" min="0.1"><span class="unit">кг · т/год · кг/м²</span></div></div>
     <div class="field"><label>Крок вантажів <i>a</i></label>
-      <div class="control"><input id="m_pitch" type="number" value="0.4" step="0.05" min="0.05"><span class="unit">м</span></div></div>
+      <div class="control"><input id="m_pitch" type="number" value="400" step="50" min="50"><span class="unit">мм</span></div></div>
   </div>
 </div>
 <div class="fsection">
@@ -539,7 +539,7 @@ ${Qa < Q*0.95 ? `<div class="note warn">Фактична подача ${fmt(Qa,1
   </div>
   <div class="fgrid g2" style="margin-top:12px">
     <div class="field"><label>Діаметр ділильного кола зірочки <i>d_s</i></label>
-      <div class="control"><input id="m_ds" type="number" value="0.145" step="0.005" min="0.04"><span class="unit">м</span></div></div>
+      <div class="control"><input id="m_ds" type="number" value="145" step="5" min="40"><span class="unit">мм</span></div></div>
     <div class="field"><label>Розривне навантаження ланцюга (для перевірки)</label>
       <div class="control"><input id="m_fbreak" type="number" value="28.5" step="0.5" min="1"><span class="unit">кН</span></div></div>
   </div>
@@ -547,11 +547,11 @@ ${Qa < Q*0.95 ? `<div class="note warn">Фактична подача ${fmt(Qa,1
 <button class="calc-btn" onclick="CALCS.mesh_chain.run()">Розрахувати</button>`,
 
     run() {
-      const L = num('m_L'), H = num('m_H'), B = num('m_B');
+      const L = num('m_L') / 1000, H = num('m_H') / 1000, B = num('m_B') / 1000;
       const v = num('m_v'), f = parseFloat(val('m_f'));
-      const eta = num('m_eta'), k = num('m_k'), ds = num('m_ds');
+      const eta = num('m_eta'), k = num('m_k'), ds = num('m_ds') / 1000;
       const qc = num('m_qc'), qn = num('m_qn'), qa = num('m_qa');
-      const loadType = val('m_loadtype'), loadVal = num('m_load'), pitch = num('m_pitch');
+      const loadType = val('m_loadtype'), loadVal = num('m_load'), pitch = num('m_pitch') / 1000;
       const nCh = parseFloat(val('m_chains'));
       const Fbreak = num('m_fbreak') * 1000;
 
@@ -710,9 +710,9 @@ ${safety < 8
   <div class="flabel">Геометрія</div>
   <div class="fgrid">
     <div class="field"><label>Довжина <i>L</i></label>
-      <div class="control"><input id="c_L" type="number" value="25" min="1"><span class="unit">м</span></div></div>
+      <div class="control"><input id="c_L" type="number" value="25000" min="1000"><span class="unit">мм</span></div></div>
     <div class="field"><label>Висота підйому <i>H</i></label>
-      <div class="control"><input id="c_H" type="number" value="3" min="-20"><span class="unit">м</span></div></div>
+      <div class="control"><input id="c_H" type="number" value="3000" min="-20000"><span class="unit">мм</span></div></div>
     <div class="field"><label>Ширина жолоба <i>B</i></label>
       <div class="control"><select id="c_B">
         <option value="0.2">200 мм</option><option value="0.3">300 мм</option>
@@ -729,7 +729,7 @@ ${safety < 8
     <div class="field"><label>Насипна щільність <i>ρ</i></label>
       <div class="control"><input id="c_rho" type="number" value="1.0" step="0.05" min="0.1"><span class="unit">т/м³</span></div></div>
     <div class="field"><label>Висота шару <i>h</i></label>
-      <div class="control"><input id="c_h" type="number" value="0.15" step="0.01" min="0.05"><span class="unit">м</span></div></div>
+      <div class="control"><input id="c_h" type="number" value="150" step="10" min="50"><span class="unit">мм</span></div></div>
   </div>
 </div>
 <div class="fsection">
@@ -754,8 +754,8 @@ ${safety < 8
 </div>
 <button class="calc-btn" onclick="CALCS.chain_scraper.run()">Розрахувати</button>`,
     run() {
-      const L = num('c_L'), H = num('c_H'), B = num('c_B');
-      const rho = num('c_rho'), h = num('c_h'), v = num('c_v');
+      const L = num('c_L') / 1000, H = num('c_H') / 1000, B = num('c_B');
+      const rho = num('c_rho'), h = num('c_h') / 1000, v = num('c_v');
       const qc = num('c_qc'), f = num('c_f'), eta = num('c_eta'), k = num('c_k');
       const betaR = Math.atan2(H, Math.sqrt(Math.max(0.01, L*L - H*H)));
       const beta = betaR*180/Math.PI;
@@ -842,7 +842,7 @@ ${safety < 8
   <div class="flabel">Геометрія</div>
   <div class="fgrid">
     <div class="field"><label>Довжина <i>L</i></label>
-      <div class="control"><input id="r_L" type="number" value="15" min="0.5"><span class="unit">м</span></div></div>
+      <div class="control"><input id="r_L" type="number" value="15000" min="500"><span class="unit">мм</span></div></div>
     <div class="field"><label>Кут нахилу <i>β</i></label>
       <div class="control"><input id="r_beta" type="number" value="3" min="-10" max="30"><span class="unit">°</span></div></div>
     <div class="field"><label>Діаметр ролика <i>d_r</i></label>
@@ -859,9 +859,9 @@ ${safety < 8
     <div class="field"><label>Маса одиниці <i>m</i></label>
       <div class="control"><input id="r_m" type="number" value="50" min="0.1"><span class="unit">кг</span></div></div>
     <div class="field"><label>Довжина вантажу <i>l</i></label>
-      <div class="control"><input id="r_l" type="number" value="0.8" step="0.05" min="0.1"><span class="unit">м</span></div></div>
+      <div class="control"><input id="r_l" type="number" value="800" step="50" min="100"><span class="unit">мм</span></div></div>
     <div class="field"><label>Проміжок між вантажами</label>
-      <div class="control"><input id="r_a" type="number" value="0.5" step="0.1" min="0"><span class="unit">м</span></div></div>
+      <div class="control"><input id="r_a" type="number" value="500" step="100" min="0"><span class="unit">мм</span></div></div>
   </div>
 </div>
 <div class="fsection">
@@ -886,8 +886,8 @@ ${safety < 8
 </div>
 <button class="calc-btn" onclick="CALCS.roller.run()">Розрахувати</button>`,
     run() {
-      const L = num('r_L'), beta = num('r_beta'), dr = num('r_dr');
-      const m = num('r_m'), lc = num('r_l'), ag = num('r_a');
+      const L = num('r_L') / 1000, beta = num('r_beta'), dr = num('r_dr');
+      const m = num('r_m'), lc = num('r_l') / 1000, ag = num('r_a') / 1000;
       const mr = num('r_mr'), f = num('r_f'), v = num('r_v'), eta = num('r_eta');
       const mode = val('r_mode');
       const bR = beta*Math.PI/180;
@@ -963,7 +963,7 @@ ${mode==='gravity'
   <div class="flabel">Геометрія</div>
   <div class="fgrid">
     <div class="field"><label>Висота підйому <i>H</i></label>
-      <div class="control"><input id="e_H" type="number" value="15" min="1"><span class="unit">м</span></div></div>
+      <div class="control"><input id="e_H" type="number" value="15000" min="1000"><span class="unit">мм</span></div></div>
     <div class="field"><label>Ємність ковша <i>i</i></label>
       <div class="control"><select id="e_i">
         <option value="0.5">0.5 л</option><option value="1">1.0 л</option>
@@ -1005,7 +1005,7 @@ ${mode==='gravity'
 </div>
 <button class="calc-btn" onclick="CALCS.bucket_belt.run()">Розрахувати</button>`,
     run() {
-      const H = num('e_H'), i = num('e_i')/1000, a = num('e_a')/1000;
+      const H = num('e_H') / 1000, i = num('e_i') / 1000, a = num('e_a') / 1000;
       const rho = num('e_rho'), psi = num('e_psi'), v = num('e_v');
       const qt = num('e_qt'), kz = num('e_kz'), eta = num('e_eta'), k = num('e_k');
       const mB = i*psi*rho*1000;
@@ -1112,7 +1112,7 @@ function switchTab(name) {
 document.addEventListener('DOMContentLoaded', () => {
   const type = new URLSearchParams(location.search).get('type') || 'belt';
   const C = getCalc(type);
-  document.title = C.title + ' — ConveyorCalc';
+  document.title = C.title + ' — EngCalc';
   $id('calc-title').textContent = C.title;
   $id('calc-sub').textContent = C.subtitle || '';
   $id('crumb-type').textContent = C.title;

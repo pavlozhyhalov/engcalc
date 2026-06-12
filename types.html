@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Типи механізмів — EngCalc</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><b>Eng</b>Calc</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Каталог</a>
+      <a href="builder.html" class="nav-link">Конфігуратор</a>
+    </div>
+  </div>
+</nav>
+
+<header class="calc-header">
+  <div class="crumbs"><a href="index.html">Каталог</a> / <span id="crumb-cat">…</span></div>
+  <h1 class="calc-title" id="cat-title">…</h1>
+  <p class="calc-sub" id="cat-sub"></p>
+</header>
+
+<main class="catalog" style="padding-top:32px">
+  <div class="grid" id="types-grid"></div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>EngCalc — інженерний розрахунок транспортних механізмів</span>
+    <span><a href="index.html" style="color:var(--blue)">← Усі категорії</a></span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+
+const CATALOG = {
+  horizontal: {
+    name: 'Горизонтальні та похилі конвеєри',
+    sub: 'Стрічкові, шнекові, скребкові, роликові та ланцюгові. Сипучі та штучні вантажі, кути до 35°.',
+    types: [
+      { id: 'belt',        name: 'Стрічковий',                  desc: 'Гумова або ПВХ стрічка на роликових опорах. Сипучі та штучні вантажі, найпоширеніший тип.',           stds: 'ISO 5048 · DIN 22101 · CEMA', ready: true,  popular: true },
+      { id: 'screw',       name: 'Шнековий (гвинтовий)',         desc: 'Гвинт у закритому жолобі або трубі. Герметичний транспорт порошків і дрібнозернистих матеріалів.',     stds: 'CEMA 350 · ДСТУ 2804',        ready: true },
+      { id: 'chain_scraper',name: 'Скребковий',                 desc: 'Ланцюг зі скребками тягне матеріал по жолобу. Важкі, гарячі та абразивні матеріали.',                  stds: 'FEM · ДСТУ',                  ready: true },
+      { id: 'mesh_chain',  name: 'Ланцюговий із сіткою / прутами', desc: 'Два паралельних ланцюги, з\'єднані прутами або сіткою. Харчова промисловість, термообробка, мийка.', stds: 'ISO 606 · DIN 8167',          ready: true,  featured: true },
+      { id: 'plate',       name: 'Пластинчастий',               desc: 'Металеві пластини на двох тягових ланцюгах. Штучні вантажі, гарячий матеріал.',                        stds: 'DIN 8167',                    ready: false },
+      { id: 'roller',      name: 'Роликовий',                   desc: 'Гравітаційний або приводний рух штучних вантажів по рядах роликів.',                                    stds: 'ISO 1537',                    ready: true },
+      { id: 'drag',        name: 'Волочильний (En-masse)',       desc: 'Транспортування у щільному шарі. Зерно, цемент, гранули.',                                              stds: 'CEMA 550',                    ready: false },
+      { id: 'belt_trough', name: 'Стрічковий жолобчатий',       desc: 'Трироликова жолобчаста опора для великих об\'ємів сипучих матеріалів.',                                 stds: 'ISO 5048 · DIN 22101',        ready: false },
+    ]
+  },
+  vertical: {
+    name: 'Вертикальний транспорт',
+    sub: 'Ківшеві елеватори, вертикальні шнеки та люлечні підйомники. Підйом на великі висоти.',
+    types: [
+      { id: 'bucket_belt', name: 'Ківшевий елеватор (стрічка)', desc: 'Ковші на гумовій стрічці. Сипучі матеріали, велика висота, висока швидкість.',              stds: 'FEM 2.122 · ISO 5052', ready: true },
+      { id: 'bucket_chain',name: 'Ківшевий елеватор (ланцюг)', desc: 'Ковші на тяговому ланцюгу. Важкі, абразивні матеріали, низькі швидкості.',                   stds: 'FEM 2.122 · DIN 15236', ready: false },
+      { id: 'screw_vertical', name: 'Шнек вертикальний',       desc: 'Вертикальний гвинтовий конвеєр. Мінімальна займана площа.',                                  stds: 'CEMA 350',              ready: false },
+      { id: 'paternoster', name: 'Люлечний (Paternoster)',      desc: 'Підвісні люльки на замкнутому ланцюгу. Штучні вантажі.',                                      stds: 'FEM',                   ready: false },
+    ]
+  },
+  overhead: {
+    name: 'Підвісні та монорейкові',
+    sub: 'Транспортування виробів у підвісному стані по монорейковому шляху.',
+    types: [
+      { id: 'overhead_chain', name: 'Підвісний ланцюговий', desc: 'Каретки на підвісному рейковому шляху з тяговим ланцюгом.',                              stds: 'FEM 9.811', ready: false },
+      { id: 'power_free',     name: 'Power & Free',          desc: 'Двоколійна система з незалежними тяговим та вантажним шляхами.',                         stds: 'FEM 9.811', ready: false },
+    ]
+  },
+  special: {
+    name: 'Спеціальні',
+    sub: 'Вібраційні, пневматичні та нестандартні типи для специфічних технологічних процесів.',
+    types: [
+      { id: 'vibro',      name: 'Вібраційний',          desc: 'Мікрокидки матеріалу при вібрації лотка. Точне дозування.',                         stds: 'ISO',         ready: false },
+      { id: 'pneumo',     name: 'Пневматичний',          desc: 'Транспортування повітряним потоком у трубопроводі.',                                stds: 'ДСТУ',        ready: false },
+      { id: 'apron',      name: 'Фартушний (Apron)',      desc: 'Важкі плити для крупнокускових матеріалів та гірської породи.',                     stds: 'CEMA · ISO',  ready: false },
+      { id: 'telescopic', name: 'Телескопічний',         desc: 'Висувні секції для завантаження фур та вагонів.',                                   stds: 'FEM',         ready: false },
+    ]
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cat = new URLSearchParams(location.search).get('cat') || 'horizontal';
+  const data = CATALOG[cat];
+  if (!data) { location.href = 'index.html'; return; }
+
+  document.title = data.name + ' — EngCalc';
+  document.getElementById('crumb-cat').textContent = data.name;
+  document.getElementById('cat-title').textContent = data.name;
+  document.getElementById('cat-sub').textContent = data.sub;
+
+  const grid = document.getElementById('types-grid');
+  grid.innerHTML = data.types.map(t => `
+    <a href="${t.ready ? 'calc.html?type=' + t.id : '#'}" class="tile${t.featured ? ' featured' : ''}${t.ready ? '' : ' soon'} reveal"${!t.ready ? ' onclick="return false"' : ''}>
+      ${t.popular ? '<span class="tile-badge">Популярний</span>' : ''}
+      ${!t.ready ? '<span class="tile-badge">Скоро</span>' : ''}
+      <span class="tile-name">${t.name}</span>
+      <span class="tile-desc">${t.desc}</span>
+      <div class="tile-foot">
+        <span class="tile-stds">${t.stds}</span>
+        ${t.ready ? '<span class="tile-go">розрахунок →</span>' : ''}
+      </div>
+    </a>
+  `).join('');
+
+  // init reveal after rendering
+  if (typeof initReveal === 'function') initReveal();
+  if (typeof initTouch === 'function') initTouch();
+});
+</script>
+<script src="js/ui.js"></script>
+</body>
+</html>

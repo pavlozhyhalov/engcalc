@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Конфігуратор — ConveyorCalc</title>
+<title>Конфігуратор — EngCalc</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="brand"><b>Conveyor</b>Calc</a>
+    <a href="index.html" class="brand"><b>Eng</b>Calc</a>
     <div class="nav-links">
       <a href="index.html" class="nav-link">Каталог</a>
       <a href="builder.html" class="nav-link active">Конфігуратор</a>
     </div>
-    <span class="nav-meta">ISO · DIN · CEMA · ДСТУ</span>
   </div>
 </nav>
 
@@ -105,11 +104,11 @@
     <div class="flabel" style="margin-top:8px">Геометрія</div>
     <div class="fgrid">
       <div class="field"><label>Довжина <i>L</i></label>
-        <div class="control"><input id="p_L" type="number" value="8" min="0.5"><span class="unit">м</span></div></div>
+        <div class="control"><input id="p_L" type="number" value="8000" min="500"><span class="unit">мм</span></div></div>
       <div class="field"><label>Висота підйому <i>H</i></label>
-        <div class="control"><input id="p_H" type="number" value="0" min="-10"><span class="unit">м</span></div></div>
+        <div class="control"><input id="p_H" type="number" value="0" min="-10000"><span class="unit">мм</span></div></div>
       <div class="field"><label>Ширина несучої частини <i>B</i></label>
-        <div class="control"><input id="p_B" type="number" value="0.6" step="0.05" min="0.1"><span class="unit">м</span></div></div>
+        <div class="control"><input id="p_B" type="number" value="600" step="50" min="100"><span class="unit">мм</span></div></div>
     </div>
 
     <div class="flabel" style="margin-top:20px">Вантаж</div>
@@ -123,7 +122,7 @@
       <div class="field"><label>Навантаження</label>
         <div class="control"><input id="p_load" type="number" value="3" step="0.5" min="0.1"><span class="unit">кг · т/год · кг/м²</span></div></div>
       <div class="field"><label>Крок вантажів <i>a</i></label>
-        <div class="control"><input id="p_pitch" type="number" value="0.4" step="0.05" min="0.05"><span class="unit">м</span></div></div>
+        <div class="control"><input id="p_pitch" type="number" value="400" step="50" min="50"><span class="unit">мм</span></div></div>
     </div>
 
     <div class="flabel" style="margin-top:20px">Маса рухомих частин</div>
@@ -149,7 +148,7 @@
       <div class="field"><label>Запас потужності <i>k</i></label>
         <div class="control"><input id="p_k" type="number" value="1.4" step="0.05" min="1" max="2.5"></div></div>
       <div class="field"><label>Діаметр зірочки/барабана <i>d_s</i></label>
-        <div class="control"><input id="p_ds" type="number" value="0.16" step="0.005" min="0.04"><span class="unit">м</span></div></div>
+        <div class="control"><input id="p_ds" type="number" value="160" step="5" min="40"><span class="unit">мм</span></div></div>
       <div class="field"><label>Розривне навантаження тягового органу</label>
         <div class="control"><input id="p_fbreak" type="number" value="28.5" step="0.5" min="1"><span class="unit">кН</span></div></div>
     </div>
@@ -169,11 +168,12 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <span>ConveyorCalc — конфігуратор нестандартних схем</span>
+    <span>EngCalc — конфігуратор нестандартних схем</span>
     <span>Методика: тяговий розрахунок за гілками + перевірка вузлів</span>
   </div>
 </footer>
 
 <script src="js/builder.js"></script>
+<script src="js/ui.js"></script>
 </body>
 </html>
