@@ -133,7 +133,7 @@ const CALCS = {
 <button class="calc-btn" onclick="CALCS.belt.run()">Розрахувати</button>`,
 
     run() {
-      _m.inputs = { L_мм: num('b_L'), H_мм: num('b_H'), β_°: num('b_beta') || 'авто', B_мм: num('b_B')*1000, v_мс: num('b_v'), Q_тгод: num('b_Q'), ρ_тм3: num('b_rho'), φ_°: num('b_phi'), η: num('b_eta'), ω: num('b_omega'), k_z: num('b_kz') };
+      _m.inputs = { 'L, мм': num('b_L'), 'H, мм': num('b_H'), 'beta, deg': num('b_beta') || 'авто', 'B, мм': num('b_B')*1000, 'v, м/с': num('b_v'), 'Q, т/год': num('b_Q'), 'rho, т/м3': num('b_rho'), 'phi, deg': num('b_phi'), 'eta': num('b_eta'), 'omega': num('b_omega'), 'kz': num('b_kz') };
       const L = num('b_L') / 1000, H = num('b_H') / 1000, rho = num('b_rho');
       const phi = num('b_phi') * Math.PI / 180;
       const Q = num('b_Q'), v = num('b_v'), B = num('b_B');
@@ -353,7 +353,7 @@ ${Qth < Q * 0.95
 <button class="calc-btn" onclick="CALCS.screw.run()">Розрахувати</button>`,
 
     run() {
-      _m.inputs = { L_мм: num('s_L'), β_°: num('s_beta'), D_мм: num('s_D')*1000, ρ_тм3: num('s_rho'), ψ: parseFloat(val('s_psi')), Q_тгод: num('s_Q'), n_обхв: num('s_n'), C_m: parseFloat(val('s_Cm')), η: num('s_eta'), k: num('s_k') };
+      _m.inputs = { 'L, мм': num('s_L'), 'beta, deg': num('s_beta'), 'D, мм': num('s_D')*1000, 'rho, т/м3': num('s_rho'), 'psi': parseFloat(val('s_psi')), 'Q, т/год': num('s_Q'), 'n, об/хв': num('s_n'), 'Cm': parseFloat(val('s_Cm')), 'eta': num('s_eta'), 'k': num('s_k') };
       const L = num('s_L') / 1000, beta = num('s_beta'), D = num('s_D'), rho = num('s_rho');
       const psi = parseFloat(val('s_psi'));
       const Q = num('s_Q'), n = num('s_n');
@@ -571,7 +571,7 @@ ${Qa < Q*0.95 ? `<div class="note warn">Фактична подача ${fmt(Qa,1
 <button class="calc-btn" onclick="CALCS.mesh_chain.run()">Розрахувати</button>`,
 
     run() {
-      _m.inputs = { L_мм: num('m_L'), H_мм: num('m_H'), B_мм: num('m_B'), v_мс: num('m_v'), f: parseFloat(val('m_f')), η: num('m_eta'), k: num('m_k'), d_s_мм: num('m_ds'), 'ланцюгів': parseFloat(val('m_chains')) };
+      _m.inputs = { 'L, мм': num('m_L'), 'H, мм': num('m_H'), 'B, мм': num('m_B'), 'v, м/с': num('m_v'), 'f': parseFloat(val('m_f')), 'eta': num('m_eta'), 'k': num('m_k'), 'ds, мм': num('m_ds'), 'chains': parseFloat(val('m_chains')) };
       const L = num('m_L') / 1000, H = num('m_H') / 1000, B = num('m_B') / 1000;
       const v = num('m_v'), f = parseFloat(val('m_f'));
       const eta = num('m_eta'), k = num('m_k'), ds = num('m_ds') / 1000;
@@ -779,7 +779,7 @@ ${safety < 8
 </div>
 <button class="calc-btn" onclick="CALCS.chain_scraper.run()">Розрахувати</button>`,
     run() {
-      _m.inputs = { L_мм: num('c_L'), H_мм: num('c_H'), B_м: num('c_B'), ρ_тм3: num('c_rho'), h_мм: num('c_h'), v_мс: num('c_v'), q_c_кгм: num('c_qc'), f: num('c_f'), η: num('c_eta'), k: num('c_k') };
+      _m.inputs = { 'L, мм': num('c_L'), 'H, мм': num('c_H'), 'B, м': num('c_B'), 'rho, т/м3': num('c_rho'), 'h, мм': num('c_h'), 'v, м/с': num('c_v'), 'qc, кг/м': num('c_qc'), 'f': num('c_f'), 'eta': num('c_eta'), 'k': num('c_k') };
       const L = num('c_L') / 1000, H = num('c_H') / 1000, B = num('c_B');
       const rho = num('c_rho'), h = num('c_h') / 1000, v = num('c_v');
       const qc = num('c_qc'), f = num('c_f'), eta = num('c_eta'), k = num('c_k');
@@ -912,7 +912,7 @@ ${safety < 8
 </div>
 <button class="calc-btn" onclick="CALCS.roller.run()">Розрахувати</button>`,
     run() {
-      _m.inputs = { L_мм: num('r_L'), β_°: num('r_beta'), d_r_мм: num('r_dr')*1000, m_кг: num('r_m'), l_мм: num('r_l'), a_мм: num('r_a'), m_r_кг: num('r_mr'), f: num('r_f'), v_мс: num('r_v'), режим: val('r_mode'), η: num('r_eta') };
+      _m.inputs = { 'L, мм': num('r_L'), 'beta, deg': num('r_beta'), 'dr, мм': num('r_dr')*1000, 'm, кг': num('r_m'), 'l, мм': num('r_l'), 'a, мм': num('r_a'), 'mr, кг': num('r_mr'), 'f': num('r_f'), 'v, м/с': num('r_v'), 'mode': val('r_mode'), 'eta': num('r_eta') };
       const L = num('r_L') / 1000, beta = num('r_beta'), dr = num('r_dr');
       const m = num('r_m'), lc = num('r_l') / 1000, ag = num('r_a') / 1000;
       const mr = num('r_mr'), f = num('r_f'), v = num('r_v'), eta = num('r_eta');
@@ -1032,7 +1032,7 @@ ${mode==='gravity'
 </div>
 <button class="calc-btn" onclick="CALCS.bucket_belt.run()">Розрахувати</button>`,
     run() {
-      _m.inputs = { H_мм: num('e_H'), i_л: num('e_i'), a_мм: num('e_a'), ρ_тм3: num('e_rho'), ψ: num('e_psi'), v_мс: num('e_v'), q_t_кгм: num('e_qt'), k_з: num('e_kz'), η: num('e_eta'), k: num('e_k') };
+      _m.inputs = { 'H, мм': num('e_H'), 'i, л': num('e_i'), 'a, мм': num('e_a'), 'rho, т/м3': num('e_rho'), 'psi': num('e_psi'), 'v, м/с': num('e_v'), 'qt, кг/м': num('e_qt'), 'kz': num('e_kz'), 'eta': num('e_eta'), 'k': num('e_k') };
       const H = num('e_H') / 1000, i = num('e_i') / 1000, a = num('e_a') / 1000;
       const rho = num('e_rho'), psi = num('e_psi'), v = num('e_v');
       const qt = num('e_qt'), kz = num('e_kz'), eta = num('e_eta'), k = num('e_k');
