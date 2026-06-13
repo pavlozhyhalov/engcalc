@@ -226,7 +226,7 @@ function _wrap(text, maxLen) {
 
 // ── Main dispatch ─────────────────────────────────────────────
 function makeSchema(type, inputs) {
-  const map = { belt: schemaBelt, screw: schemaScrew, mesh_chain: schemaMeshChain, chain_scraper: schemaScraper, roller: schemaRoller, bucket_belt: schemaBucket };
+  const map = { belt: schemaBelt, screw: schemaScrew, mesh_chain: schemaMeshChain, chain_scraper: schemaScraper, roller: schemaRoller, bucket_belt: schemaBucket, plate: schemaMeshChain, drag: schemaScraper, screw_vertical: schemaScrew };
   if (type === 'builder' && inputs && inputs.state) return schemaBuilder(inputs.state, inputs.labels);
   return (map[type] || (() => ''))(inputs);
 }
