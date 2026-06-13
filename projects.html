@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мої проєкти — EngCalc</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><b>Eng</b>Calc</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Каталог</a>
+      <a href="builder.html" class="nav-link">Конфігуратор</a>
+      <a href="projects.html" class="nav-link active">Мої проєкти</a>
+    </div>
+  </div>
+</nav>
+<header class="calc-header">
+  <div class="crumbs"><a href="index.html">Каталог</a> / Мої проєкти</div>
+  <h1 class="calc-title">Мої проєкти</h1>
+  <p class="calc-sub">Збережені розрахунки з цього браузера.</p>
+</header>
+<div class="calc-body">
+  <div style="max-width:700px;margin:0 auto">
+    <div id="project-list"></div>
+  </div>
+</div>
+<footer class="footer">
+  <div class="footer-inner">
+    <span>EngCalc — збережені розрахунки</span>
+    <span>Дані зберігаються локально у браузері (localStorage).</span>
+  </div>
+</footer>
+<script src="js/schema.js"></script>
+<script src="js/calc.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', renderProjectList);
+</script>
+</body>
+</html>

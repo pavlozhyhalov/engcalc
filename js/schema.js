@@ -233,7 +233,7 @@ function makeSchema(type, inputs) {
 
 // ── Report download ───────────────────────────────────────────
 function downloadReport(opts) {
-  const { title, subtitle, schemaHtml, resultsHtml, inputRows, steps } = opts;
+  const { title, subtitle, schemaHtml, resultsHtml, inputRows, steps, checks } = opts;
   const date = new Date().toLocaleDateString('uk-UA');
 
   const css = `
@@ -275,7 +275,23 @@ th{background:#f5f5f5;font-weight:600;text-align:left}
 .bres-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .schema{background:#f5f5f5;border:1px solid #ddd;border-radius:4px;padding:10px 14px;font-family:monospace;font-size:10px;color:#555;margin-bottom:10px}
 .ft{margin-top:18px;border-top:1px solid #ddd;padding-top:8px;font-size:9.5px;color:#aaa;text-align:center}
-@media print{body{padding:8px 20px}}`;
+@media print{body{padding:8px 20px}}
+.sc-pdf{margin:8px 0}
+.sc-head{display:grid;grid-template-columns:1fr 140px 140px 70px;gap:4px;background:#f5f5f5;padding:4px 8px;font-size:9.5px;font-weight:700;border-bottom:2px solid #e8a317}
+.sc-row-pdf{display:grid;grid-template-columns:1fr 140px 140px 70px;gap:4px;padding:4px 8px;border-bottom:1px solid #eee;font-size:10.5px}
+.pill{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;font-family:monospace}
+.pill.ok{background:#dcfce7;color:#166534}.pill.warn{background:#fef9c3;color:#854d0e}.pill.err{background:#fee2e2;color:#991b1b}
+.sb-pdf{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:4px;margin:8px 0;font-weight:700;font-size:12px}
+.sb-pdf.ok{background:#dcfce7;border:1px solid #86efac;color:#166534}
+.sb-pdf.warn{background:#fef9c3;border:1px solid #fde047;color:#854d0e}
+.sb-pdf.err{background:#fee2e2;border:1px solid #fca5a5;color:#991b1b}`;
+
+  const scorecardPdfHtml = (checks && checks.length) ? (() => {
+    const overall = checks.some(c => c.status === 'err') ? 'err' : checks.some(c => c.status === 'warn') ? 'warn' : 'ok';
+    const badgeText = { ok: '✓ КОНСТРУКЦІЯ ПРОХОДИТЬ ПЕРЕВІРКУ', warn: '⚠ КОНСТРУКЦІЯ ПОТРЕБУЄ УВАГИ', err: '✗ КОНСТРУКЦІЯ НЕ ПРОХОДИТЬ ПЕРЕВІРКУ' }[overall];
+    const rows = checks.map(c => `<div class="sc-row-pdf"><span>${c.name}</span><span class="v">${c.value}</span><span>${c.limit||'—'}</span><span><span class="pill ${c.status}">${c.status==='ok'?'OK':c.status==='warn'?'WARN':'ERR'}</span></span></div>`).join('');
+    return `<div class="sb-pdf ${overall}">${badgeText}</div><div class="sc-pdf"><div class="sc-head"><span>Перевірка</span><span>Значення</span><span>Допустимо</span><span>Статус</span></div>${rows}</div>`;
+  })() : '';
 
   const stepsHtml = (steps && steps.length) ? `
 <div class="sec">Хід розрахунку</div>
@@ -303,6 +319,7 @@ ${(inputRows||[]).map(r=>`<tr><td>${r[0]}</td><td class="v">${r[1]}</td><td>${r[
 </table>
 <div class="sec">Принципова схема</div>
 <div class="schema-box">${schemaHtml||'<p style="color:#aaa;padding:16px">—</p>'}</div>
+${scorecardPdfHtml ? `<div class="sec">Перевірка конструкції</div>${scorecardPdfHtml}` : ''}
 ${stepsHtml}
 <div class="sec">Підсумкові результати</div>
 ${resultsHtml||''}
